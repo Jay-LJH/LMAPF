@@ -9,8 +9,8 @@ import os
 import random
 from world_property import State
 import itertools
-
-MAPdirDict = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1), 4: (-1, 0)} # 0 wait ,1 right, 2 down, 3 left, 4 up
+# 0 wait ,1 right, 2 down, 3 left, 4 up
+MAPdirDict = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1), 4: (-1, 0)} 
 actionDict = {v: k for k, v in MAPdirDict.items()}
 
 numbers = [0, 1, 2, 3, 4]
@@ -19,55 +19,61 @@ actions_combination_list = list(itertools.permutations(numbers, 3))
 
 class CO_MAPFEnv(gym.Env):
     """map MAPF problems to a standard RL environment"""
-    def __init__(self,env_id, gap=EnvParameters.GAP):
-        """initialization"""
-        self.obstacle_gap = gap
+    def __init__(self,env_id,path="maps/Maze.txt"):      
+        self.induct_value = -3
+        self.eject_value = -2
+        self.obstacle_value = -1
+        self.travel_value = 0
         self.env_id=env_id
         self.project_path = os.getcwd() + "/h_maps"
         self.num_agents=EnvParameters.N_AGENT
-        self.world_high = EnvParameters.WORLD_HIGH
-        self.world_wide = EnvParameters.WORLD_WIDE
+        self.world_high,self.world_wide,self.total_map=self.read_map(path)
         self.finished_task=0
         self.wait_map=np.zeros((self.world_high,self.world_wide))
         self.build_sorting_map()
         self.build_guide_map()
+        
+    def read_map(self,file_path):
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+        dimensions = lines[0].strip().split()
+        rows = int(dimensions[0])
+        cols = int(dimensions[1])
 
+        map_data = []
+        for line in lines[1:rows+1]:
+            map_data.append(list(line.strip()))
+        for i in range(rows):
+            for j in range(cols):
+                if map_data[i][j] == '@':
+                    map_data[i][j] = self.obstacle_value
+                elif map_data[i][j] == 'e':
+                    map_data[i][j] = self.eject_value
+                elif map_data[i][j] == 'i':
+                    map_data[i][j] = self.induct_value
+                else:
+                    map_data[i][j] = self.travel_value
+        return rows, cols, np.array(map_data,dtype=np.int32)
+    
     def build_sorting_map(self):
-        map_1 = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
-        map_2 = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
-        for row in range(3, self.world_high - 3, self.obstacle_gap):
-            map_1[row, 1:self.world_wide - 1] = -2
-        for col in range(2, self.world_wide - 2, self.obstacle_gap):
-            map_2[2:self.world_high - 2, col] = -2 
-        self.total_map = map_1 + map_2
-        self.total_map[self.total_map == -4] = -1
-        for i in range(self.world_wide):
-            if self.total_map[2, i] == -2: # induct
-                self.total_map[0, i] = -3
-                self.total_map[-1, i] = -3
-
         eject_station_id=10000
         induct_station_id=1000
+        # -1: obstacle, -2: eject station, -3: induct station
         for i in range(self.world_high):
             for j in range(self.world_wide):
-                if self.total_map[i,j]==-1: # set the stations around the obstacle are the same
-                    self.station_map[i,j+1]= eject_station_id
-                    self.station_map[i, j - 1] = eject_station_id
-                    self.station_map[i-1, j] = eject_station_id
-                    self.station_map[i+1, j] = eject_station_id
+                if self.total_map[i, j] == self.eject_value:
+                    self.station_map[i, j] = eject_station_id
                     eject_station_id+=1
-                if self.total_map[i,j]==-3:
-                    self.station_map[i,j]= induct_station_id
+                elif self.total_map[i, j] == self.induct_value:
+                    self.station_map[i, j] = induct_station_id
                     induct_station_id+=1
-
-        self.total_map[0, 0] = self.total_map[0, -1] = self.total_map[-1, 0] = self.total_map[-1, -1] = -1
         self.obstacle_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         self.eject_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         self.induct_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
-        self.obstacle_map[self.total_map == -1] = 1
-        self.eject_map[self.total_map == -2] = 1
-        self.induct_map[self.total_map == -3] = 1
+        self.obstacle_map[self.total_map == self.obstacle_value] = 1
+        self.eject_map[self.total_map == self.eject_value] = 1
+        self.induct_map[self.total_map == self.induct_value] = 1
         self.eject_induct_map = self.eject_map + self.induct_map
 
     def build_guide_map(self):
@@ -83,6 +89,7 @@ class CO_MAPFEnv(gym.Env):
                     bottom_poss = min(i + CopParameters.FOV // 2 + 1, self.world_high)
                     left_poss = max(j - CopParameters.FOV // 2, 0)
                     right_poss = min(j + CopParameters.FOV // 2 + 1, self.world_wide)
+                    
                     FOV_top, FOV_left = max(CopParameters.FOV // 2 - i, 0), max(
                         CopParameters.FOV // 2 -j, 0)
                     FOV_bottom, FOV_right = FOV_top + (bottom_poss - top_poss), FOV_left + (right_poss - left_poss)
@@ -99,11 +106,16 @@ class CO_MAPFEnv(gym.Env):
                 if item in self.node_index_dict.keys():
                     self.nearby_node_dict[node_index].append(self.node_index_dict[item])
 
-    def global_reset(self):
-        self.rhcr=lifelong_pibt_1.RHCR_class_pibt_learn(random.randint(1, 1024),self.num_agents, self.world_high, self.world_wide,self.env_id,self.total_map, self.station_map,self.project_path)
+    # rand: whether to use a fixed seed 
+    # seed: the seed for random
+    def global_reset(self,rand = False,seed=42):
+        self.rhcr=lifelong_pibt_1.RHCR_class_pibt_learn(seed if rand else random.randint(1, 1024)\
+            ,self.num_agents, self.world_high, self.world_wide,self.env_id,self.total_map, \
+                self.station_map,self.project_path)
         self.rhcr.update_start_goal(EnvParameters.H)
 
-        self.agent_state=np.zeros((self.world_high,self.world_wide))  # indicate the number of robots in each grids
+        # indicate the number of robots in each grids
+        self.agent_state=np.zeros((self.world_high,self.world_wide))  
         self.agent_poss=self.rhcr.rl_agent_poss
         for index, poss in enumerate(self.agent_poss):
             self.agent_state[poss] += 1
@@ -113,7 +125,8 @@ class CO_MAPFEnv(gym.Env):
         self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
         self.uti_deque = deque(maxlen=CopParameters.UTIL_T)
         self.all_wait_map = np.zeros((self.world_high, self.world_wide))
-        self.world=State(self.world_high,self.world_wide,self.node_poss)  # handle heuristic value related things
+        # handle heuristic value related things
+        self.world=State(self.world_high,self.world_wide,self.node_poss)  
         map_location=self.project_path+"/"+ str(self.env_id)+str(self.world_high)+str(self.world_wide)+"py_h_map.npy"
         try:
             with open(map_location, 'rb') as f:
@@ -124,33 +137,6 @@ class CO_MAPFEnv(gym.Env):
             heuristic_map=self.rhcr.obtaion_heuri_map()
             self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map,map_location) #convert and ssave
         self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
-        return
-
-    def global_reset_fix(self, seed): # same as the above function but with a fixed seed, so the goal assignment is always the same
-        self.rhcr=lifelong_pibt_1.RHCR_class_pibt_learn(seed, self.num_agents, self.world_high, self.world_wide,self.env_id,self.total_map, self.station_map,self.project_path)
-        self.rhcr.update_start_goal(EnvParameters.H)
-
-        self.agent_state=np.zeros((self.world_high,self.world_wide))
-        self.agent_poss=self.rhcr.rl_agent_poss
-        for index, poss in enumerate(self.agent_poss):
-            self.agent_state[poss] += 1
-        # set recording to 0
-        self.time_step,self.local_time_step,self.all_finished_task=0,0,0
-        self.goals_id= np.zeros(self.num_agents, dtype=np.int32)
-        self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
-        self.uti_deque = deque(maxlen=CopParameters.UTIL_T)
-        self.all_wait_map = np.zeros((self.world_high, self.world_wide))
-        self.world=State(self.world_high,self.world_wide,self.node_poss)
-        map_location=self.project_path+"/"+ str(self.env_id)+str(self.world_high)+str(self.world_wide)+"py_h_map.npy"
-        try:
-            with open(map_location, 'rb') as f:
-                self.world.heuristic_map = np.load(f, allow_pickle=True).item()
-                self.world.all_priority= np.load(f, allow_pickle=True).item()
-                self.world.all_h_map = np.load(f, allow_pickle=True)
-        except FileNotFoundError:
-            heuristic_map=self.rhcr.obtaion_heuri_map()
-            self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map,map_location) #convert and ssave
-        self.elapsed=np.zeros(self.num_agents)
         return
 
     def local_reset(self):  # update goals
@@ -239,7 +225,6 @@ class CO_MAPFEnv(gym.Env):
             local_done=False
         return done, local_done, rewards, actor_obs,actor_vec
 
-
     def observe_for_map(self):
         map_obs = np.zeros((1, CopParameters.N_NODE,CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV), dtype=np.float32)
         map_vector=np.expand_dims(np.eye(CopParameters.N_NODE,dtype=np.float32), axis=0)
@@ -323,9 +308,7 @@ class CO_MAPFEnv(gym.Env):
 
 if __name__ == '__main__':
     env=CO_MAPFEnv(1)
-    print(env.total_map)
-    print()
-    print(env.station_map)
+    print(env.obs_range)
 
 
 

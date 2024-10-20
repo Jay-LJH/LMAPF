@@ -1,1 +1,8 @@
 recordings/
+models/
+wandb/
+.vscode/
+__pycache__/
+h_maps/
+*/build/
+*.ipynb

@@ -5,14 +5,14 @@
 #include <random>
 #include <chrono>
 
-void SortingGrid::load_map(vector<vector<int>>& py_map,vector<vector<int>>& station_map, int num_rows, int num_cols)  //type,station,weight?  -- need to reread paper to understand what the situation mean
+// build sorting grid from map
+// py_map: total_map from python
+// station_map: station_map from python
+void SortingGrid::load_map(vector<vector<int>>& py_map,vector<vector<int>>& station_map, int num_rows, int num_cols) 
 {
 	this->rows = num_rows; // read number of cols
 	this->cols = num_cols; // read number of rows
-	move[0] = 1;
-	move[1] = -cols;
-	move[2] = -1;
-	move[3] = cols;
+	move = {1, -cols, -1, cols}; // set move directions
 	//read tyeps, station ids and edge weights
 	this->types.resize(rows * cols); //  for each node
 	this->weights.resize(rows * cols);
@@ -29,7 +29,7 @@ void SortingGrid::load_map(vector<vector<int>>& py_map,vector<vector<int>>& stat
                 {
                     this->types[poss]="Eject";
                     int id_num=station_map[i][j];
-                    boost::unordered_map<int, std::list<int> >::iterator it = ejects.find(id_num);
+                    boost::unordered_map<int, std::list<int> >::iterator it = this->ejects.find(id_num);
                     if (it == ejects.end())
                     {
                         this->ejects[id_num] = std::list<int>();
@@ -40,7 +40,8 @@ void SortingGrid::load_map(vector<vector<int>>& py_map,vector<vector<int>>& stat
                     this->types[poss]="Obstacle";
                 else if (py_map[i][j]==0)
                     this->types[poss]="Travel";
-
+                // set weight between nodes
+                // if it is obstacle or exceed map, set weight to max else set to 1
                 weights[poss].resize(5, 1.0); // why weight is different?
                 if (this->types[poss]=="Obstacle")
                 {
@@ -60,7 +61,8 @@ void SortingGrid::load_map(vector<vector<int>>& py_map,vector<vector<int>>& stat
     }
 }
 
-
+// compute heuristics table for all inducts and ejects nodes
+// read from file if exists, otherwise compute and save to file
 void SortingGrid::preprocessing(const std::string& project_path,int env_id)
 {
     std::string fname;
@@ -79,6 +81,7 @@ void SortingGrid::preprocessing(const std::string& project_path,int env_id)
     }
     else
     {
+        // compute heuristics for all inducts and ejects nodes and save them
         for (auto induct : inducts)
         {
             heuristics[induct.second] = compute_heuristics(induct.second);  // first is id, second is location

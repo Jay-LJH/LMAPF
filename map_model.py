@@ -15,7 +15,8 @@ class MapModel(object):
         self.device = device
         self.network = MAP_ACNet().to(device)  # neural network
         if global_model:
-            self.net_optimizer = optim.Adam(self.network.parameters(), lr=TrainingParameters.lr, eps=TrainingParameters.opti_eps,weight_decay=TrainingParameters.weight_decay)
+            self.net_optimizer = optim.Adam(self.network.parameters(), lr=TrainingParameters.lr, 
+                                            eps=TrainingParameters.opti_eps,weight_decay=TrainingParameters.weight_decay)
             # self.multi_gpu_net = torch.nn.DataParallel(self.network) # training on multiple GPU
             self.net_scaler = GradScaler()  # automatic mixed precision
 

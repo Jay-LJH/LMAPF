@@ -20,7 +20,7 @@ print("Welcome to LMAPF!\n")
 def main():
     """main code"""
     if RecordingParameters.RETRAIN:
-        restore_path = '/home/marmot/Yutong/action_order_3_neigbor/models/beat_pibt/order_action_3_coll_0.3_neigbor_0.2522-08-241202/final'
+        restore_path = 'models/beat_pibt/order_action_3_coll_0.3_neigbor_0.2502-09-240906/final'
         map_net_path_checkpoint = restore_path + "/map_net_checkpoint.pkl"
         map_net_dict = torch.load(map_net_path_checkpoint)
 
@@ -29,13 +29,7 @@ def main():
             wandb_id = 'ycnxp5xk'
         else:
             wandb_id = wandb.util.generate_id()
-        wandb.init(project=RecordingParameters.EXPERIMENT_PROJECT,
-                   name=RecordingParameters.EXPERIMENT_NAME,
-                   entity=RecordingParameters.ENTITY,
-                   notes=RecordingParameters.EXPERIMENT_NOTE,
-                   config=all_args,
-                   id=wandb_id,
-                   resume='allow')
+        wandb.init(project="LMAPF")
         print('id is:{}'.format(wandb_id))
         print('Launching wandb...\n')
         wandb.define_metric("map/step")

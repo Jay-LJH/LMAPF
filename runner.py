@@ -3,7 +3,7 @@ import ray
 import torch
 
 from alg_parameters import *
-from CO_mapf_gym import CO_MAPFEnv
+from CO_mapf_gym_file import CO_MAPFEnv
 from util import set_global_seeds
 from map_model import MapModel
 
@@ -39,6 +39,7 @@ class Runner(object):
 
                 map_action, ps, v, self.map_hidden_state= self.local_map_model.step(self.map_obs,self.map_vector,
                                                                            self.map_hidden_state,self.num_node)
+                print(map_action.shape)
                 mb_values.append(v)
                 mb_ps.append(ps)
                 mb_actions.append(map_action)

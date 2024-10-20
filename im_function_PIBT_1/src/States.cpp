@@ -1,6 +1,6 @@
 #include "States.h"
 
-
+// overload operator << & >> to print and read State
 std::ostream & operator << (std::ostream &out, const State &s)
 {
     out << s.location << "," << s.orientation << "," << s.timestep;

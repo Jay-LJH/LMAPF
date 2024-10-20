@@ -70,8 +70,9 @@ class MAP_ACNet(nn.Module):
         num_agent = x.shape[1]
         x = torch.reshape(x, (-1, CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV))
         x_1 = torch.reshape(x_1, (-1, CopParameters.VEC_LEN))
-
+        print("x shape: ", x.shape)
         identity = self.downsample1(x)
+        print("identity shape: ", identity.shape)   
         x = self.conv1(x)
         x = self.relu(x)
         x = self.conv2(x)
@@ -84,7 +85,7 @@ class MAP_ACNet(nn.Module):
         x = self.relu2(x)
         x = self.conv4(x)
         x += identity
-        x = self.relu2(x)
+        x = self.relu2(x) 
 
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
@@ -114,12 +115,13 @@ class MAP_ACNet(nn.Module):
 if __name__ == '__main__':
     net=MAP_ACNet()
     obs = torch.torch.rand(
-        (2,8, CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV),
+        (3,384, CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV),
         dtype=torch.float32)
-    vec = torch.torch.rand((2,8, CopParameters.VEC_LEN), dtype=torch.float32)
+    vec = torch.torch.rand((3,384, CopParameters.VEC_LEN), dtype=torch.float32)
     hidden_state = (
-        torch.torch.rand((8 * 2, CopParameters.NET_SIZE)),
-        torch.torch.rand((8* 2, CopParameters.NET_SIZE)))  # [B*A,3]
+        torch.torch.rand((384 * 3, CopParameters.NET_SIZE)),
+        torch.torch.rand((384* 3, CopParameters.NET_SIZE)))  # [B*A,3]
     #
     policy, value,policy_sig, output_state = net(obs,vec, hidden_state)
     print("test")
+    print(f"policy shape: {policy.shape}\nvalue: {value.shape}")

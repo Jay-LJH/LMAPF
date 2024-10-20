@@ -7,12 +7,12 @@ class CopParameters:
     MAP_ACTION=5  # 0 right, 1 down, 2 left, 3 up， 4:wait
     OUTPUT_ACTION=60
     OBS_CHANNEL=17
-    NET_SIZE = 512
-    NET_VEC=64
-    N_NODE = 460
+    NET_SIZE = 128
+    NET_VEC= 32
+    N_NODE = 50 
     EPISODE_LEN= 5120
-    NUM_WINDOW= 32
-    FOV=11
+    NUM_WINDOW= 5
+    FOV=5
     MINIBATCH_SIZE = int(32)
     GAIN=0.01
     UTIL_T=15
@@ -26,11 +26,11 @@ class CopParameters:
 
 
 class EnvParameters:
-    N_AGENT=384
+    N_AGENT= 30
     N_ACTIONS = 5
     EPISODE_LEN = 5120
-    WORLD_HIGH = 22
-    WORLD_WIDE= 23
+    WORLD_HIGH = 10
+    WORLD_WIDE= 10
     GAP=3
     H=5
 
@@ -45,25 +45,25 @@ class TrainingParameters:
     VALUE_COEF = 0.5
     POLICY_COEF = 1
     N_EPOCHS = 8
-    N_ENVS = 32 # number of processes
+    N_ENVS = 1 # number of processes
     N_MAX_STEPS = 4e7  # maximum number of time steps used in training
-    opti_eps=1e-5
+    opti_eps=1e-8
     weight_decay=0
 
 
 class SetupParameters:
     SEED = 42
-    USE_GPU_LOCAL = False
+    USE_GPU_LOCAL = True
     USE_GPU_GLOBAL = True
     NUM_GPU = 1
 
 
 class RecordingParameters:
     RETRAIN = False
-    WANDB = True
-    ENTITY = 'yutong'  #记得换成自己的wandb account
+    WANDB = False
+    ENTITY = 'JayLiu'  #记得换成自己的wandb account
     TIME = datetime.datetime.now().strftime('%d-%m-%y%H%M')
-    EXPERIMENT_PROJECT = 'beat_pibt'
+    EXPERIMENT_PROJECT = 'LMAPF'
     EXPERIMENT_NAME = 'PIBT_MARL'
     EXPERIMENT_NOTE = 'anything you want to note'
     SAVE_INTERVAL = 1e5  # interval of saving model
