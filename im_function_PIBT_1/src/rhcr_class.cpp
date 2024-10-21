@@ -3,13 +3,13 @@
 // init RHCR and create graph, preprocessing and set
 // call at python gym/global_reset
 RHCR_class_pibt_learn::RHCR_class_pibt_learn(int seed, int num_of_robots, int rows, int cols,
-                                             int env_id, vector<vector<int>> py_map, vector<vector<int>> station_map, 
-                                             std::string project_path) : num_of_robots(num_of_robots), rows(rows), 
-                                             cols(cols), seed(seed)
+                                             int env_id, std::string project_path) : num_of_robots(num_of_robots), rows(rows),
+                                                                                     cols(cols), seed(seed), env_id(env_id), path(project_path)
 {
 }
 
-RHCR_class_pibt_learn::~RHCR_class_pibt_learn() {
+RHCR_class_pibt_learn::~RHCR_class_pibt_learn()
+{
     delete G;
     delete solver;
 }
@@ -18,7 +18,7 @@ RHCR_class_pibt_learn::~RHCR_class_pibt_learn() {
 // update the start & goal locations of agents
 void RHCR_class_pibt_learn::update_start_goal(int rl_simulation_window)
 {
-    std::cout<<"base class update start goal,you should not see this"<<std::endl;
+    std::cout << "base class update start goal,you should not see this" << std::endl;
     assert(false);
 }
 
@@ -67,7 +67,7 @@ bool RHCR_class_pibt_learn::update_system(vector<vector<pair<int, int>>> input_p
         std::tie(id, loc, t) = task;
         finished_tasks[id].emplace_back(loc, t);
         num_of_tasks++;
-        finish_task(id, loc, t);    
+        finish_task(id, loc, t);
     }
     timestep += simulation_window;
     return true;
@@ -103,7 +103,7 @@ void RHCR_class_pibt_learn::initialize()
     {
         // goals
         int goal = goal_locations[k].back().first; // location of the goal
-        if (G->types[goal] != "Eject") // at the beginning we only can only choose eject as goal
+        if (G->types[goal] != "Eject")             // at the beginning we only can only choose eject as goal
         {
             std::cout << "ERROR in the type of goal locations" << std::endl;
             std::cout << "The fiducial type of the goal of agent " << k << " is " << G->types[goal] << std::endl;
@@ -116,14 +116,14 @@ void RHCR_class_pibt_learn::initialize()
 // random choose empty position to place robot
 void RHCR_class_pibt_learn::initialize_start_locations()
 {
-    std::cout<<"base class initialize start locations,you should not see this"<<std::endl;
-    assert(false); 
+    std::cout << "base class initialize start locations,you should not see this" << std::endl;
+    assert(false);
 }
 
 // set goal location for each agent
 void RHCR_class_pibt_learn::initialize_goal_locations()
 {
-    std::cout<<"base class initialize goal locations,you should not see this"<<std::endl;
+    std::cout << "base class initialize goal locations,you should not see this" << std::endl;
     assert(false);
 }
 
@@ -161,16 +161,16 @@ list<tuple<int, int, int>> RHCR_class_pibt_learn::move()
         }
     }
 
-    // remove goals if the agent has reached them and add to finished_tasks 
+    // remove goals if the agent has reached them and add to finished_tasks
     for (int t = start_timestep; t <= end_timestep; t++)
     {
         for (int k = 0; k < num_of_robots; k++)
         {
-            State curr = paths[k][t];       
+            State curr = paths[k][t];
             // the agent finish its current task, what is the meaning of first,second
             if (!goal_locations[k].empty() &&
                 curr.location == goal_locations[k].front().first &&
-                curr.timestep >= goal_locations[k].front().second) 
+                curr.timestep >= goal_locations[k].front().second)
             {
                 goal_locations[k].erase(goal_locations[k].begin());
                 curr_finished_tasks.emplace_back(k, curr.location, t);
@@ -183,7 +183,7 @@ list<tuple<int, int, int>> RHCR_class_pibt_learn::move()
 // add new tasks to agents if needed for the next planning horizon
 void RHCR_class_pibt_learn::update_goal_locations()
 {
-    std::cout<<"base class update goal locations,you should not see this"<<std::endl;
+    std::cout << "base class update goal locations,you should not see this" << std::endl;
     assert(false);
 }
 
@@ -200,7 +200,7 @@ bool RHCR_class_pibt_learn::congested() const
         while (t < simulation_window && path[timestep].location == path[timestep + t].location &&
                path[timestep].orientation == path[timestep + t].orientation) // choose wait action
             t++;
-        if (t == simulation_window) 
+        if (t == simulation_window)
             wait_agents++;
     }
     return wait_agents > num_of_robots / 2;
@@ -209,9 +209,10 @@ bool RHCR_class_pibt_learn::congested() const
 // update the start locations of agents
 void RHCR_class_pibt_learn::update_start_locations() // reset timestep to 0
 {
+    cout<<"start size:" <<starts.size()<<endl;
+    cout<<"path size:" <<paths.size()<<endl;
     for (int k = 0; k < num_of_robots; k++)
     {
         starts[k] = State(paths[k][timestep].location, 0, paths[k][timestep].orientation);
     }
 }
-

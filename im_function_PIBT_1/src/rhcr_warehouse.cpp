@@ -2,11 +2,13 @@
 
 RHCR_warehouse::RHCR_warehouse(int seed, int num_of_robots, int rows, int cols,
                                int env_id, vector<vector<int>> py_map, vector<vector<int>> station_map, std::string project_path) :
-                                RHCR_class_pibt_learn(seed, num_of_robots, rows, cols, env_id, py_map, station_map, project_path)                               
+                                RHCR_class_pibt_learn(seed, num_of_robots, rows, cols, env_id,project_path)                               
 {
     RHCR_class_pibt_learn::G =new SortingGrid();
     solver = new PIBT_MAPD(*G, seed, rows * cols);
     G = static_cast<SortingGrid*>(RHCR_class_pibt_learn::G);
+    this->env_id = env_id;
+    this->path = project_path;
     srand(seed);
     G->load_map(py_map, station_map, rows, cols);
     G->preprocessing(project_path, env_id); // calculated heuristic of all goals
@@ -195,7 +197,7 @@ void RHCR_warehouse::finish_task(int agent_id, int location, int timestep)
         drives_in_induct_stations[location]--; // the drive will leave the current induct station
     }
 }
-void RHCR_warehouse::assign_goal(int pos)
+void RHCR_warehouse::assign_goal(int agent,int pos)
 {
     return;
 }

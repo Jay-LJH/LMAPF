@@ -30,11 +30,12 @@ void MazeGraph::load_map(vector<vector<int>> &py_map, int num_rows, int num_cols
             if (py_map[i][j] == -1)
             {
                 this->types[pos] = "Obstacle";
+                obstacles.insert(pos);
             }
             else
             {
                 this->types[pos] = "Travel";
-                this->map_travels.insert(pos);
+                travels.insert(pos);
             }
             this->weights[pos].resize(4, 1.0);
             if (this->types[pos] == "Obstacle")
@@ -79,4 +80,18 @@ void MazeGraph::preprocessing(const std::string &project_path, int env_id)
             }
         }
     }
+}
+
+// find a free position in the map
+int MazeGraph::get_random_travel()
+{
+    if(travels.empty())
+    {
+        return -1;
+    }
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int result;
+    std::sample(travels.begin(), travels.end(), &result, 1, gen);
+    return result;
 }
