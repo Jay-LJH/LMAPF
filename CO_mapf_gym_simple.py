@@ -32,7 +32,6 @@ class CO_MAPFEnv(gym.Env):
     def build_sorting_map(self):
         map_1 = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         map_2 = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
-        self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         for row in range(3, self.world_high - 3, self.obstacle_gap):
             map_1[row, 1:self.world_wide - 1] = -2
         for col in range(2, self.world_wide - 2, self.obstacle_gap):
@@ -44,6 +43,7 @@ class CO_MAPFEnv(gym.Env):
                 self.total_map[0, i] = -3
                 self.total_map[-1, i] = -3
 
+        self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         eject_station_id=10000
         induct_station_id=1000
         for i in range(self.world_high):

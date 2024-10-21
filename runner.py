@@ -3,7 +3,7 @@ import ray
 import torch
 
 from alg_parameters import *
-from CO_mapf_gym_file import CO_MAPFEnv
+from CO_mapf_gym import CO_MAPFEnv
 from util import set_global_seeds
 from map_model import MapModel
 

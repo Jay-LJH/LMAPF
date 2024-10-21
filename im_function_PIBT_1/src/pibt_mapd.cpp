@@ -15,7 +15,6 @@ PIBT_MAPD::PIBT_MAPD(const BasicGraph& G, int seed, int map_size)
 {
     this->MT = new std::mt19937(seed);
 }
-
 PIBT_MAPD::~PIBT_MAPD()
 {
     for (auto a : A) delete a;

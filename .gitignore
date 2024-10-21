@@ -6,3 +6,5 @@ __pycache__/
 h_maps/
 */build/
 *.ipynb
+*.txt
+.dir_hash

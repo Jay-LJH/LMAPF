@@ -29,9 +29,10 @@ public:
     std::vector<Path> paths;
     std::vector<std::list<std::pair<int, int> > > finished_tasks; // location + finish time
 
-    RHCR_class_pibt_learn(int seed,int num_of_robots, int rows,int cols,int env_id,vector<vector<int>> py_map,vector<vector<int>> station_map,std::string project_path);
-    ~RHCR_class_pibt_learn();
-    void update_start_goal(int rl_simulation_window);
+    RHCR_class_pibt_learn(int seed,int num_of_robots, int rows,int cols,int env_id,
+        vector<vector<int>> py_map,vector<vector<int>> station_map,std::string project_path);
+    virtual ~RHCR_class_pibt_learn();
+    
     vector<int> run_pibt(const vector<vector<int>>& action_guide);
     bool update_system(vector<vector<pair<int, int>>> input_path);
     std::unordered_map<Position, vector<double>> obtaion_heuri_map();
@@ -39,20 +40,19 @@ public:
     bool congested() const;
     void update_paths(const std::vector<State>& MAPF_paths);
     list<tuple<int, int, int>> move();
-    void initialize();
+    virtual void initialize();
     // assign tasks
-    void initialize_start_locations();
-    void initialize_goal_locations();
-    void update_goal_locations();
-
-    int assign_induct_station(int curr) const;
-    int assign_eject_station() const;
+    virtual void update_start_goal(int rl_simulation_window);
+    virtual void initialize_start_locations();
+    virtual void initialize_goal_locations();
+    virtual void update_goal_locations();
+    virtual void assign_goal(int pos){return;};
+    virtual void finish_task(int agent_id, int location, int timestep){return;};
     Position int2Pos(int loc){
         return Position(loc/cols,loc%cols);
     }
-protected:
-    SortingGrid G;
-    PIBT_MAPD solver;
-    boost::unordered_map<int, int> drives_in_induct_stations;  //number of robot in each stations
 
+protected:
+    BasicGraph* G; //it should be a pointer to basegraph, but keep it for convenience
+    PIBT_MAPD* solver;
 };
