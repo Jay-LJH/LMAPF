@@ -12,6 +12,7 @@ MazeGraph::MazeGraph(vector<vector<int>> &py_map, string path, int env_id)
     load_map(py_map, py_map.size(), py_map[0].size());
     preprocessing(path, env_id);
 }
+
 // initialize the maze graph from python map
 // the map is a 2D array, -1 is obstacle, 0 is travel
 void MazeGraph::load_map(vector<vector<int>> &py_map, int num_rows, int num_cols)

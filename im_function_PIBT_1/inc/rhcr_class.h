@@ -37,7 +37,7 @@ public:
 
     vector<int> run_pibt(const vector<vector<int>> &action_guide);
     bool update_system(vector<vector<pair<int, int>>> input_path);
-    std::unordered_map<Position, vector<double>> obtaion_heuri_map();
+    std::unordered_map<Position, vector<double>> get_heuri_map();
     void update_start_locations();
     bool congested() const;
     void update_paths(const std::vector<State> &MAPF_paths);
@@ -50,6 +50,7 @@ public:
     virtual void update_goal_locations();
     virtual void assign_goal(int agent,int pos) { return; };
     virtual void finish_task(int agent_id, int location, int timestep) { return; };
+    void print();
     Position int2Pos(int loc)
     {
         return Position(loc / cols, loc % cols);

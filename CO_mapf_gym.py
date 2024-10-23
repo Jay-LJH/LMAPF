@@ -121,7 +121,7 @@ class CO_MAPFEnv(gym.Env):
                 self.world.all_priority= np.load(f, allow_pickle=True).item()
                 self.world.all_h_map = np.load(f, allow_pickle=True)
         except FileNotFoundError:
-            heuristic_map=self.rhcr.obtaion_heuri_map()
+            heuristic_map=self.rhcr.get_heuri_map()
             self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map,map_location) #convert and ssave
         self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
         return
@@ -148,7 +148,7 @@ class CO_MAPFEnv(gym.Env):
                 self.world.all_priority= np.load(f, allow_pickle=True).item()
                 self.world.all_h_map = np.load(f, allow_pickle=True)
         except FileNotFoundError:
-            heuristic_map=self.rhcr.obtaion_heuri_map()
+            heuristic_map=self.rhcr.get_heuri_map()
             self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map,map_location) #convert and ssave
         self.elapsed=np.zeros(self.num_agents)
         return

@@ -98,7 +98,6 @@ class CO_MAPFEnv(gym.Env):
                     self.node_poss.append((i, j))
                     self.node_index_dict[(i,j)]=node_index
                     node_index+=1
-
         for node_index, node in enumerate(self.node_poss):
             self.nearby_node_dict[node_index] = []
             near_by_grid=[(node[0]-1,node[1]),(node[0]+1,node[1]),(node[0],node[1]-1),(node[0],node[1]+1)]
@@ -109,11 +108,8 @@ class CO_MAPFEnv(gym.Env):
     # rand: whether to use a fixed seed 
     # seed: the seed for random
     def global_reset(self,rand = False,seed=42):
-        self.rhcr=lifelong_pibt_1.RHCR_class_pibt_learn(seed if rand else random.randint(1, 1024)\
-            ,self.num_agents, self.world_high, self.world_wide,self.env_id,self.total_map, \
-                self.station_map,self.project_path)
+        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, EnvParameters.N_AGENT, 1,self.total_map, ".")
         self.rhcr.update_start_goal(EnvParameters.H)
-
         # indicate the number of robots in each grids
         self.agent_state=np.zeros((self.world_high,self.world_wide))  
         self.agent_poss=self.rhcr.rl_agent_poss
@@ -126,7 +122,7 @@ class CO_MAPFEnv(gym.Env):
         self.uti_deque = deque(maxlen=CopParameters.UTIL_T)
         self.all_wait_map = np.zeros((self.world_high, self.world_wide))
         # handle heuristic value related things
-        self.world=State(self.world_high,self.world_wide,self.node_poss)  
+        self.world=State(self.world_high,self.world_wide,self.node_poss) 
         map_location=self.project_path+"/"+ str(self.env_id)+str(self.world_high)+str(self.world_wide)+"py_h_map.npy"
         try:
             with open(map_location, 'rb') as f:
@@ -134,7 +130,7 @@ class CO_MAPFEnv(gym.Env):
                 self.world.all_priority= np.load(f, allow_pickle=True).item()
                 self.world.all_h_map = np.load(f, allow_pickle=True)
         except FileNotFoundError:
-            heuristic_map=self.rhcr.obtaion_heuri_map()
+            heuristic_map=self.rhcr.get_heuri_map()
             self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map,map_location) #convert and ssave
         self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
         return
@@ -166,10 +162,8 @@ class CO_MAPFEnv(gym.Env):
             action_guidance[i,act_order[0]]=CopParameters.TOP_NUM
             action_guidance[i, act_order[1]] = CopParameters.TOP_NUM-1
             action_guidance[i, act_order[2]] = CopParameters.TOP_NUM - 2
-
         # solve conflict by PIBT
         coll_times=self.rhcr.run_pibt(action_guidance)
-
         self.agent_poss=self.rhcr.rl_path
         uti_map = np.zeros((5, self.world_high, self.world_wide))
         # update final status
@@ -199,7 +193,6 @@ class CO_MAPFEnv(gym.Env):
                 self.elapsed[i]=0
 
         self.uti_deque.append(uti_map)
-
         for node_index in range(CopParameters.N_NODE):
             for neigbor in self.nearby_node_dict[node_index]:
                 team_rewards[:,node_index]+=rewards[:,neigbor]
@@ -214,7 +207,6 @@ class CO_MAPFEnv(gym.Env):
         self.local_time_step+=1
         rewards=self.joint_move(map_action)
         actor_obs,actor_vec = self.observe_for_map()
-
         if self.time_step >= CopParameters.EPISODE_LEN:
             done = True
         else:
@@ -251,11 +243,11 @@ class CO_MAPFEnv(gym.Env):
             worse_poss = self.world.all_priority[ag_goal][poss][1]
             for first in first_poss:
                 all_first_map[first[0], first[1]] += 1
-                agent_first_map[0,node_index, first[0]-top_left[0] ,first[1]-top_left[1]]=1  # i - top_left[0], j - top_left[1]
+                agent_first_map[0,node_index, first[0]-top_left[0] ,first[1]-top_left[1]]=1 
             for worse in worse_poss:
                 all_worse_map[worse[0], worse[1]] += 1
                 agent_worse_map[0,node_index, worse[0]-top_left[0], worse[1]-top_left[1]] = 1
-
+        
         all_order_map/= self.num_agents
         for node in range(CopParameters.N_NODE):
             FOV_top, FOV_bottom, FOV_left, FOV_right, top_poss, bottom_poss, left_poss, right_poss,_ = self.obs_range[node]

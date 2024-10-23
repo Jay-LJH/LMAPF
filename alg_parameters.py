@@ -9,7 +9,7 @@ class CopParameters:
     OBS_CHANNEL=17
     NET_SIZE = 128
     NET_VEC= 32
-    N_NODE = 50 
+    N_NODE = 51 
     EPISODE_LEN= 5120
     NUM_WINDOW= 5
     FOV=5
@@ -26,7 +26,7 @@ class CopParameters:
 
 
 class EnvParameters:
-    N_AGENT= 30
+    N_AGENT= 5
     N_ACTIONS = 5
     EPISODE_LEN = 5120
     WORLD_HIGH = 10

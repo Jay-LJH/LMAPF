@@ -5,7 +5,7 @@ RHCR_warehouse::RHCR_warehouse(int seed, int num_of_robots, int rows, int cols,
                                 RHCR_class_pibt_learn(seed, num_of_robots, rows, cols, env_id,project_path)                               
 {
     RHCR_class_pibt_learn::G =new SortingGrid();
-    solver = new PIBT_MAPD(*G, seed, rows * cols);
+    solver = new PIBT_MAPD(*RHCR_class_pibt_learn::G, seed, rows * cols);
     G = static_cast<SortingGrid*>(RHCR_class_pibt_learn::G);
     this->env_id = env_id;
     this->path = project_path;

@@ -19,4 +19,5 @@ public:
     void update_start_goal(int rl_simulation_window) override;
     void finish_task(int agent_id, int location, int timestep) override;
     void assign_goal(int agnet,int pos) override;
+    
 };

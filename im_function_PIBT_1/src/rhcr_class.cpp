@@ -74,7 +74,7 @@ bool RHCR_class_pibt_learn::update_system(vector<vector<pair<int, int>>> input_p
 }
 
 // convert heuristics map to python version, from int to position
-std::unordered_map<Position, vector<double>> RHCR_class_pibt_learn::obtaion_heuri_map()
+std::unordered_map<Position, vector<double>> RHCR_class_pibt_learn::get_heuri_map()
 {
     std::unordered_map<Position, vector<double>> rl_h_map;
     for (auto it = G->heuristics.begin(); it != G->heuristics.end(); ++it)
@@ -209,10 +209,47 @@ bool RHCR_class_pibt_learn::congested() const
 // update the start locations of agents
 void RHCR_class_pibt_learn::update_start_locations() // reset timestep to 0
 {
-    cout<<"start size:" <<starts.size()<<endl;
-    cout<<"path size:" <<paths.size()<<endl;
     for (int k = 0; k < num_of_robots; k++)
     {
         starts[k] = State(paths[k][timestep].location, 0, paths[k][timestep].orientation);
     }
+}
+void RHCR_class_pibt_learn::print()
+{
+    for (int i = 0; i < cols; i++)
+    {
+        for (int j = 0; j < rows; j++)
+        {
+            int pos = i * cols + j;
+            if (G->types[pos] == "Obstacle")
+            {
+                cout << "@";
+            }
+            else if (G->types[pos] == "Travel")
+            {
+                cout << ".";
+            }
+        }
+        cout << endl;
+    }
+    for (int i = 0; i < num_of_robots; i++)
+    {
+        cout << "Agent " << i << ": " << "position: " << rl_agent_poss[i].first << " " << rl_agent_poss[i].second << " goal list: ";
+
+        for (auto p : goal_locations[i])
+        {
+            cout << '[' << p.first << "," << p.second << "] ";
+        }
+
+        cout << endl;
+    }
+    cout << "rl agent goals in cpp: ";
+    for (auto p : rl_agent_goals)
+    {
+        for (auto pp : p)
+        {
+            cout << '[' << pp.first << "," << pp.second << "],";
+        }
+    }
+    cout << endl;
 }

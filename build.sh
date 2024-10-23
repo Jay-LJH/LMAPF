@@ -18,6 +18,7 @@ if [ "$CURRENT_HASH" != "$PREVIOUS_HASH" ]; then
     echo "Directory content has changed. Rebuilding and running the program."
     cd "$DIR_PATH/build"
     make clean
+    CFLAGS='-g -O0' ./configure --with-pydebug
     make -j8
     cd ../..
     CURRENT_HASH=$(find "$DIR_PATH" -type f -exec sha256sum {} + | sort | sha256sum)

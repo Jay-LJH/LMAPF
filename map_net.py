@@ -70,9 +70,7 @@ class MAP_ACNet(nn.Module):
         num_agent = x.shape[1]
         x = torch.reshape(x, (-1, CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV))
         x_1 = torch.reshape(x_1, (-1, CopParameters.VEC_LEN))
-        print("x shape: ", x.shape)
-        identity = self.downsample1(x)
-        print("identity shape: ", identity.shape)   
+        identity = self.downsample1(x)  
         x = self.conv1(x)
         x = self.relu(x)
         x = self.conv2(x)
@@ -94,7 +92,7 @@ class MAP_ACNet(nn.Module):
         x_1=F.relu(self.fully_connected_1(x_1))
         x=torch.cat((x,x_1),-1)
         x = self.layer_norm_2(x)
-
+        
         identity=x
         x = F.relu(self.fully_connected_2(x))
         x = self.fully_connected_3(x)
@@ -105,7 +103,6 @@ class MAP_ACNet(nn.Module):
         hidden_state = (x, memory_c)
         x = torch.reshape(x, (-1, num_agent, CopParameters.NET_SIZE))
         x =self.layer_norm_4(x)
-
         policy_layer = self.policy_layer(x)
         policy = self.softmax_layer(policy_layer)
         policy_sig = torch.sigmoid(policy_layer)
