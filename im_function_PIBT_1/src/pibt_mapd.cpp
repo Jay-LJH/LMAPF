@@ -61,7 +61,7 @@ bool PIBT_MAPD::run(const vector<vector<int>> &action_guide)
         int d_a = G.heuristics.at(a->g)[a->v_now.location];
         int d_b = G.heuristics.at(b->g)[b->v_now.location];
         if (d_a != d_b)
-            return d_a < d_b; //  lower distance represent higher priority, true a has higher priority
+            return d_a < d_b; //  lower distance represent higher priority
         if (a->elapsed != b->elapsed)
             return a->elapsed > b->elapsed;
         // use initial distance
