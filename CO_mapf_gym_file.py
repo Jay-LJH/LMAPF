@@ -19,7 +19,7 @@ actions_combination_list = list(itertools.permutations(numbers, 3))
 
 class CO_MAPFEnv(gym.Env):
     """map MAPF problems to a standard RL environment"""
-    def __init__(self,env_id,path="maps/Maze.txt"):      
+    def __init__(self,env_id,path="maps/Maze_25_25.txt"):      
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
@@ -123,15 +123,15 @@ class CO_MAPFEnv(gym.Env):
         self.all_wait_map = np.zeros((self.world_high, self.world_wide))
         # handle heuristic value related things
         self.world=State(self.world_high,self.world_wide,self.node_poss) 
-        map_location=self.project_path+"/"+ str(self.env_id)+str(self.world_high)+str(self.world_wide)+"py_h_map.npy"
-        try:
-            with open(map_location, 'rb') as f:
-                self.world.heuristic_map = np.load(f, allow_pickle=True).item()
-                self.world.all_priority= np.load(f, allow_pickle=True).item()
-                self.world.all_h_map = np.load(f, allow_pickle=True)
-        except FileNotFoundError:
-            heuristic_map=self.rhcr.get_heuri_map()
-            self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map,map_location) #convert and ssave
+        # map_location=self.project_path+"/"+ str(self.env_id)+str(self.world_high)+str(self.world_wide)+"py_h_map.npy"
+        # try:
+        #     with open(map_location, 'rb') as f:
+        #         self.world.heuristic_map = np.load(f, allow_pickle=True).item()
+        #         self.world.all_priority= np.load(f, allow_pickle=True).item()
+        #         self.world.all_h_map = np.load(f, allow_pickle=True)
+        # except FileNotFoundError:
+        heuristic_map=self.rhcr.get_heuri_map()
+        self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map) #convert and save
         self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
         return
 
@@ -228,7 +228,7 @@ class CO_MAPFEnv(gym.Env):
         all_first_map = np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
         all_worse_map = np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
         all_order_map= np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
-        agents_order = [i for i in range(self.num_agents)]
+        agents_order = [i for i in range(self.num_agents)]      
         agents_order.sort(key=lambda x: (self.world.heuristic_map[self.rhcr.rl_agent_goals[x][self.goals_id[x]]][
                                           self.agent_poss[x][0] * self.world_wide + self.agent_poss[x][1]], -self.elapsed[x],
                                       -self.rhcr.tie_breaker[x])) # the former has higher priority

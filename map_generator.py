@@ -22,7 +22,7 @@ class map:
             print("".join(["@" if cell == -1 else "." for cell in row]))
     def serialize(self):
         print(self.__class__.__name__)
-        path = os.getcwd() + '/maps/' + self.__class__.__name__ + '.txt'
+        path = os.getcwd() + '/maps/' + self.__class__.__name__ +"_"+str(self.width)+"_"+str(self.height) +'.txt'
         with open(path, 'w') as f:
             f.write(f"{self.width} {self.height}\n")
             for row in self.matrix:
@@ -74,6 +74,9 @@ class Maze(map):
             self.generate_maze_prim(1, 1)
         else:
             raise ValueError("Function not supported")
+        self.travels=0
+        for i in self.matrix:
+            self.travels+=list(i).count(0)
     
     def generate_maze_dfs(self, x, y):
         directions = [(0, -2), (2, 0), (0, 2), (-2, 0)]
@@ -176,9 +179,10 @@ class Warehouse(map):
         self.eject_induct_map = self.eject_map + self.induct_map
         
 if __name__ == "__main__":
-    maze = Maze(EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE, seed=42, obstacle_rate=0.5)
+    maze = Maze(EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE, seed=42, obstacle_rate=EnvParameters.OBSTACLE_RATE)
     maze.print_map()
     maze.serialize()
+    
     print(maze.matrix)
-        
+    print(maze.travels)
     

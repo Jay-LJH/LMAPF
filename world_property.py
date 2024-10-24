@@ -15,7 +15,8 @@ class State(object):  # world property
         self.all_h_map = None
         self.node_poss = node_poss
 
-    def convert_all_heuri_map(self,heuristic_map,obstacle_map,map_location):
+    # convert heuristic map to all_priority and all_h_map
+    def convert_all_heuri_map(self,heuristic_map,obstacle_map):
         self.heuristic_map=heuristic_map
         self.all_priority = {}
         self.all_h_map = np.zeros((4,self.world_high,self.world_wide))
@@ -30,9 +31,9 @@ class State(object):  # world property
                     if poss[0] + dx < self.world_high and poss[0] + dx >= 0 and poss[1] + dy < self.world_wide and poss[1] + dy >= 0 and \
                             obstacle_map[poss[0] + dx, poss[1] + dy] != 1:
                         h_value=heuristic_map[goal_poss][(poss[0] + dx) * self.world_wide + poss[1] + dy]
-                        if h_value==curr_h:
-                            print('same')
-                        elif h_value==curr_h-1:
+                        # if h_value==curr_h:
+                        #     print('same')
+                        if h_value==curr_h-1:
                             self.all_priority[goal_poss][poss][0].append((poss[0] + dx, poss[1] + dy))
                             self.all_h_map[action-1,poss[0],poss[1]]+=1
                         elif h_value==curr_h+1:
@@ -40,10 +41,10 @@ class State(object):  # world property
                         else:
                             print('error')
         self.all_h_map/=np.max(self.all_h_map)
-        with open(map_location, 'wb') as f:
-            np.save(f, heuristic_map)
-            np.save(f, self.all_priority)
-            np.save(f, self.all_h_map)
+        # with open(map_location, 'wb') as f:
+        #     np.save(f, heuristic_map)
+        #     np.save(f, self.all_priority)
+        #     np.save(f, self.all_h_map)
         return
 
 

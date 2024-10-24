@@ -9,10 +9,10 @@ class CopParameters:
     OBS_CHANNEL=17
     NET_SIZE = 128
     NET_VEC= 32
-    N_NODE = 51 
+    N_NODE = 314 
     EPISODE_LEN= 5120
-    NUM_WINDOW= 5
-    FOV=5
+    NUM_WINDOW= 32
+    FOV=11
     MINIBATCH_SIZE = int(32)
     GAIN=0.01
     UTIL_T=15
@@ -26,11 +26,13 @@ class CopParameters:
 
 
 class EnvParameters:
-    N_AGENT= 5
+    N_AGENT= 262
     N_ACTIONS = 5
     EPISODE_LEN = 5120
-    WORLD_HIGH = 10
-    WORLD_WIDE= 10
+    WORLD_HIGH = 25
+    WORLD_WIDE= 25
+    OBSTACLE_RATE = 0.5
+    AGENT_RATE = 0.83
     GAP=3
     H=5
 
