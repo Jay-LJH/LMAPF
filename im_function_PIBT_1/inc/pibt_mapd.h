@@ -19,6 +19,7 @@ public:
     void update(const vector< vector<pair<int, int> > >& goal_locations);
     // main
     bool run(const vector<vector<int>>& action_guide);
+    bool run();
 
 private:
   // PIBT agent
@@ -42,7 +43,7 @@ private:
   std::mt19937* MT;
   // result of priority inheritance: true -> valid, false -> invalid
   bool funcPIBT(Agent* ai, Agent* aj = nullptr);
-
+  bool funcPIBT_without_guide(Agent* ai, Agent* aj = nullptr);
 
 };
 

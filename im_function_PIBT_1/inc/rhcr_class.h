@@ -34,7 +34,7 @@ public:
     RHCR_class_pibt_learn(int seed, int num_of_robots, int rows, int cols, int env_id,
                           std::string project_path);
     virtual ~RHCR_class_pibt_learn();
-
+    vector<int> run_pibt();
     vector<int> run_pibt(const vector<vector<int>> &action_guide);
     bool update_system(vector<vector<pair<int, int>>> input_path);
     std::unordered_map<Position, vector<double>> get_heuri_map();

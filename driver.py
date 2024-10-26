@@ -12,7 +12,7 @@ from map_model import MapModel
 from runner import RLRunner
 from util import set_global_seeds, map_perf, write_to_wandb_map, window_map_perf
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 ray.init(num_gpus=SetupParameters.NUM_GPU)
 print("Welcome to LMAPF!\n")
 
@@ -20,13 +20,13 @@ print("Welcome to LMAPF!\n")
 def main():
     """main code"""
     if RecordingParameters.RETRAIN:
-        restore_path = 'models/beat_pibt/order_action_3_coll_0.3_neigbor_0.2502-09-240906/final'
+        restore_path = 'models/LMAPF/Maze24-10-241708/final'
         map_net_path_checkpoint = restore_path + "/map_net_checkpoint.pkl"
         map_net_dict = torch.load(map_net_path_checkpoint)
 
     if RecordingParameters.WANDB:
         if RecordingParameters.RETRAIN:
-            wandb_id = 'ycnxp5xk'
+            wandb_id = '587ljdoa'
         else:
             wandb_id = wandb.util.generate_id()
         wandb.init(project="LMAPF")

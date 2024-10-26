@@ -26,13 +26,13 @@ class CopParameters:
 
 
 class EnvParameters:
-    N_AGENT= 262
+    N_AGENT= 131
     N_ACTIONS = 5
     EPISODE_LEN = 5120
     WORLD_HIGH = 25
     WORLD_WIDE= 25
     OBSTACLE_RATE = 0.5
-    AGENT_RATE = 0.83
+    AGENT_RATE = 0.4
     GAP=3
     H=5
 
@@ -47,7 +47,7 @@ class TrainingParameters:
     VALUE_COEF = 0.5
     POLICY_COEF = 1
     N_EPOCHS = 8
-    N_ENVS = 1 # number of processes
+    N_ENVS = 16 # number of processes, 2*cpu cores
     N_MAX_STEPS = 4e7  # maximum number of time steps used in training
     opti_eps=1e-8
     weight_decay=0
@@ -57,17 +57,17 @@ class SetupParameters:
     SEED = 42
     USE_GPU_LOCAL = True
     USE_GPU_GLOBAL = True
-    NUM_GPU = 1
+    NUM_GPU = 2
 
 
 class RecordingParameters:
-    RETRAIN = False
-    WANDB = False
+    RETRAIN = True
+    WANDB = True
     ENTITY = 'JayLiu'  #记得换成自己的wandb account
     TIME = datetime.datetime.now().strftime('%d-%m-%y%H%M')
     EXPERIMENT_PROJECT = 'LMAPF'
-    EXPERIMENT_NAME = 'PIBT_MARL'
-    EXPERIMENT_NOTE = 'anything you want to note'
+    EXPERIMENT_NAME = 'Maze'
+    EXPERIMENT_NOTE = 'first train using maze map'
     SAVE_INTERVAL = 1e5  # interval of saving model
     PRINT_INTERVAL=1e4
     MODEL_PATH = './models' + '/' + EXPERIMENT_PROJECT + '/' + EXPERIMENT_NAME + TIME

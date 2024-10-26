@@ -23,8 +23,6 @@ class Runner(object):
         throughput=self.env_map.all_finished_task/self.env_map.episode_len
         return throughput,self.env_map.global_path,self.env_map.collide_times
 
-
-
 if __name__ == "__main__":
     import os
     if not os.path.exists("./h_maps"):

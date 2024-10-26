@@ -1,0 +1,56 @@
+Directory content has not changed. No need to rebuild.
+/home/marmot/ljh/LMAPF/map_net.py:67: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast()
+2024-10-24 17:40:50,096	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+wandb: Using wandb-core as the SDK backend. Please refer to https://wandb.me/wandb-core for more information.
+wandb: Currently logged in as: liujay (liujay-National University of Singapore Students' Union). Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.18.5
+wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241024_174054-mrilozob
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run polar-plant-9
+wandb: ⭐️ View project at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF
+wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/mrilozob
+/home/marmot/ljh/LMAPF/map_model.py:21: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  self.net_scaler = GradScaler()  # automatic mixed precision
+[36m(pid=3975402)[0m /home/marmot/ljh/LMAPF/map_net.py:67: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+[36m(pid=3975402)[0m   @autocast()
+/home/marmot/ljh/LMAPF/map_model.py:79: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast():
+*** SIGTERM received at time=1729829395 on cpu 1 ***
+PC: @     0x7ed6e1091117  (unknown)  (unknown)
+    @     0x7ed6e1042520  (unknown)  (unknown)
+    @ ... and at least 1 more frames
+[2024-10-25 11:09:55,751 E 3975062 3975062] logging.cc:440: *** SIGTERM received at time=1729829395 on cpu 1 ***
+[2024-10-25 11:09:55,751 E 3975062 3975062] logging.cc:440: PC: @     0x7ed6e1091117  (unknown)  (unknown)
+[2024-10-25 11:09:55,751 E 3975062 3975062] logging.cc:440:     @     0x7ed6e1042520  (unknown)  (unknown)
+[2024-10-25 11:09:55,751 E 3975062 3975062] logging.cc:440:     @ ... and at least 1 more frames
+wandb: - 0.004 MB of 0.004 MB uploaded./run.sh: line 30: 3975062 Aborted                 (core dumped) python driver.py
+Directory content has not changed. No need to rebuild.
+/home/marmot/ljh/LMAPF/map_net.py:67: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast()
+2024-10-25 18:07:02,908	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+/home/marmot/ljh/LMAPF/driver.py:25: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  map_net_dict = torch.load(map_net_path_checkpoint)
+wandb: Using wandb-core as the SDK backend. Please refer to https://wandb.me/wandb-core for more information.
+wandb: Currently logged in as: liujay (liujay-National University of Singapore Students' Union). Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.18.5
+wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241025_180707-5telc39o
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run grateful-wood-14
+wandb: ⭐️ View project at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF
+wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/5telc39o
+/home/marmot/ljh/LMAPF/map_model.py:21: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  self.net_scaler = GradScaler()  # automatic mixed precision
+[36m(pid=2307460)[0m /home/marmot/ljh/LMAPF/map_net.py:67: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+[36m(pid=2307460)[0m   @autocast()
+/home/marmot/ljh/LMAPF/map_model.py:79: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast():
+*** SIGTERM received at time=1729917563 on cpu 2 ***
+PC: @     0x7e496cc91117  (unknown)  (unknown)
+    @     0x7e496cc42520  (unknown)  (unknown)
+    @ ... and at least 1 more frames
+[2024-10-26 11:39:23,514 E 2307134 2307134] logging.cc:440: *** SIGTERM received at time=1729917563 on cpu 2 ***
+[2024-10-26 11:39:23,514 E 2307134 2307134] logging.cc:440: PC: @     0x7e496cc91117  (unknown)  (unknown)
+[2024-10-26 11:39:23,514 E 2307134 2307134] logging.cc:440:     @     0x7e496cc42520  (unknown)  (unknown)
+[2024-10-26 11:39:23,514 E 2307134 2307134] logging.cc:440:     @ ... and at least 1 more frames
+wandb: - 0.015 MB of 0.015 MB uploaded./run.sh: line 30: 2307134 Aborted                 (core dumped) python driver.py

@@ -32,6 +32,12 @@ vector<int> RHCR_class_pibt_learn::run_pibt(const vector<vector<int>> &action_gu
     return solver->coll_times;
 }
 
+vector<int> RHCR_class_pibt_learn::run_pibt()
+{
+    bool succ =solver->run(); // solve one step
+    update_paths(solver->solution);
+    return solver->coll_times;
+}
 // call from python gym/local_reset
 // update the system based on the true path in gym env
 bool RHCR_class_pibt_learn::update_system(vector<vector<pair<int, int>>> input_path) // update goal

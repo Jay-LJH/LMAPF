@@ -108,6 +108,8 @@ class CO_MAPFEnv(gym.Env):
     # rand: whether to use a fixed seed 
     # seed: the seed for random
     def global_reset(self,rand = False,seed=42):
+        if rand:
+            seed = random.randint(0, 100000)
         self.rhcr=lifelong_pibt_1.RHCR_maze(seed, EnvParameters.N_AGENT, 1,self.total_map, ".")
         self.rhcr.update_start_goal(EnvParameters.H)
         # indicate the number of robots in each grids
@@ -123,13 +125,6 @@ class CO_MAPFEnv(gym.Env):
         self.all_wait_map = np.zeros((self.world_high, self.world_wide))
         # handle heuristic value related things
         self.world=State(self.world_high,self.world_wide,self.node_poss) 
-        # map_location=self.project_path+"/"+ str(self.env_id)+str(self.world_high)+str(self.world_wide)+"py_h_map.npy"
-        # try:
-        #     with open(map_location, 'rb') as f:
-        #         self.world.heuristic_map = np.load(f, allow_pickle=True).item()
-        #         self.world.all_priority= np.load(f, allow_pickle=True).item()
-        #         self.world.all_h_map = np.load(f, allow_pickle=True)
-        # except FileNotFoundError:
         heuristic_map=self.rhcr.get_heuri_map()
         self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map) #convert and save
         self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
