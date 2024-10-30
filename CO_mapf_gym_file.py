@@ -1,5 +1,5 @@
 import copy
-
+from util import *
 import gym
 import numpy as np
 from im_function_PIBT_1.build import lifelong_pibt_1
@@ -19,41 +19,27 @@ actions_combination_list = list(itertools.permutations(numbers, 3))
 
 class CO_MAPFEnv(gym.Env):
     """map MAPF problems to a standard RL environment"""
-    def __init__(self,env_id,path="maps/Maze_25_25.txt"):      
+    def __init__(self,env_id,file_name=None):
+        if file_name is None:
+            path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
+            config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
+        else:
+            path = "maps/" + file_name + ".txt"
+            config = "maps/" + file_name + ".config"
+        if os.path.exists(config):
+                read_config(config)
+        self.world_high,self.world_wide,self.total_map=read_map(path)     
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
         self.travel_value = 0
         self.env_id=env_id
-        self.project_path = os.getcwd() + "/h_maps"
-        self.num_agents=EnvParameters.N_AGENT
-        self.world_high,self.world_wide,self.total_map=self.read_map(path)
+        self.project_path = os.getcwd() + "/h_maps"       
+        self.num_agents=runParameters.N_AGENT
         self.finished_task=0
         self.wait_map=np.zeros((self.world_high,self.world_wide))
         self.build_sorting_map()
-        self.build_guide_map()
-        
-    def read_map(self,file_path):
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-        dimensions = lines[0].strip().split()
-        rows = int(dimensions[0])
-        cols = int(dimensions[1])
-
-        map_data = []
-        for line in lines[1:rows+1]:
-            map_data.append(list(line.strip()))
-        for i in range(rows):
-            for j in range(cols):
-                if map_data[i][j] == '@':
-                    map_data[i][j] = self.obstacle_value
-                elif map_data[i][j] == 'e':
-                    map_data[i][j] = self.eject_value
-                elif map_data[i][j] == 'i':
-                    map_data[i][j] = self.induct_value
-                else:
-                    map_data[i][j] = self.travel_value
-        return rows, cols, np.array(map_data,dtype=np.int32)
+        self.build_guide_map()        
     
     def build_sorting_map(self):
         self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
@@ -110,7 +96,7 @@ class CO_MAPFEnv(gym.Env):
     def global_reset(self,rand = False,seed=42):
         if rand:
             seed = random.randint(0, 100000)
-        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, EnvParameters.N_AGENT, 1,self.total_map, ".")
+        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, runParameters.N_AGENT, 1,self.total_map, ".")
         self.rhcr.update_start_goal(EnvParameters.H)
         # indicate the number of robots in each grids
         self.agent_state=np.zeros((self.world_high,self.world_wide))  
@@ -142,10 +128,10 @@ class CO_MAPFEnv(gym.Env):
         past_position = copy.copy(self.agent_poss)
         self.agent_state = np.zeros((self.world_high, self.world_wide))
         action = np.zeros(self.num_agents, dtype=np.int32)
-        agent_on_grid = np.zeros(CopParameters.N_NODE)
-        team_agent_on_grid = np.zeros(CopParameters.N_NODE)
-        rewards = np.zeros((1, CopParameters.N_NODE), dtype=np.float32)
-        team_rewards = np.zeros((1, CopParameters.N_NODE), dtype=np.float32)
+        agent_on_grid = np.zeros(runParameters.N_NODE)
+        team_agent_on_grid = np.zeros(runParameters.N_NODE)
+        rewards = np.zeros((1, runParameters.N_NODE), dtype=np.float32)
+        team_rewards = np.zeros((1, runParameters.N_NODE), dtype=np.float32)
 
         action_guidance=np.zeros((self.num_agents,CopParameters.MAP_ACTION),dtype=np.int32) # the bigger the number the high the priority
         # transfer action
@@ -188,7 +174,7 @@ class CO_MAPFEnv(gym.Env):
                 self.elapsed[i]=0
 
         self.uti_deque.append(uti_map)
-        for node_index in range(CopParameters.N_NODE):
+        for node_index in range(runParameters.N_NODE):
             for neigbor in self.nearby_node_dict[node_index]:
                 team_rewards[:,node_index]+=rewards[:,neigbor]
                 team_agent_on_grid[node_index]+=agent_on_grid[neigbor]
@@ -213,22 +199,22 @@ class CO_MAPFEnv(gym.Env):
         return done, local_done, rewards, actor_obs,actor_vec
 
     def observe_for_map(self):
-        map_obs = np.zeros((1, CopParameters.N_NODE,CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV), dtype=np.float32)
-        map_vector=np.expand_dims(np.eye(CopParameters.N_NODE,dtype=np.float32), axis=0)
+        map_obs = np.zeros((1, runParameters.N_NODE,CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV), dtype=np.float32)
+        map_vector=np.expand_dims(np.eye(runParameters.N_NODE,dtype=np.float32), axis=0)
         if self.time_step != 0:
             sum_util_map = np.sum(self.uti_deque, axis=0)
             sum_util_map = 40 * sum_util_map / self.num_agents
         else:
             sum_util_map = np.zeros((5, self.world_high, self.world_wide))
-        all_first_map = np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
-        all_worse_map = np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
-        all_order_map= np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
+        all_first_map = np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
+        all_worse_map = np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
+        all_order_map= np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
         agents_order = [i for i in range(self.num_agents)]      
         agents_order.sort(key=lambda x: (self.world.heuristic_map[self.rhcr.rl_agent_goals[x][self.goals_id[x]]][
                                           self.agent_poss[x][0] * self.world_wide + self.agent_poss[x][1]], -self.elapsed[x],
                                       -self.rhcr.tie_breaker[x])) # the former has higher priority
-        agent_first_map = np.zeros((1,CopParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
-        agent_worse_map = np.zeros((1,CopParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
+        agent_first_map = np.zeros((1,runParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
+        agent_worse_map = np.zeros((1,runParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
         for visible_ag, poss in enumerate(self.agent_poss):
             node_index=self.node_index_dict[poss]
             _, _, _, _,_,_,_,_,top_left = self.obs_range[node_index]
@@ -244,7 +230,7 @@ class CO_MAPFEnv(gym.Env):
                 agent_worse_map[0,node_index, worse[0]-top_left[0], worse[1]-top_left[1]] = 1
         
         all_order_map/= self.num_agents
-        for node in range(CopParameters.N_NODE):
+        for node in range(runParameters.N_NODE):
             FOV_top, FOV_bottom, FOV_left, FOV_right, top_poss, bottom_poss, left_poss, right_poss,_ = self.obs_range[node]
             obs_map = np.ones((1, CopParameters.FOV, CopParameters.FOV))
             induct_eject_map = np.zeros((1, CopParameters.FOV, CopParameters.FOV))

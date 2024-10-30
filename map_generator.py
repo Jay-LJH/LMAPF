@@ -4,10 +4,11 @@ import numpy as np
 from alg_parameters import *
 
 class map:
-    def __init__(self, width=EnvParameters.WORLD_WIDE, height=EnvParameters.WORLD_HIGH,seed=42,path=None):
+    def __init__(self, width=runParameters.WORLD_WIDE, height=runParameters.WORLD_HIGH,seed=42,path=None):
         self.width = width
         self.height = height
-        self.seed = seed      
+        self.seed = seed 
+        self.path = path    
         if path:
             self.load(path)
         else:
@@ -21,8 +22,10 @@ class map:
         for row in self.matrix:
             print("".join(["@" if cell == -1 else "." for cell in row]))
     def serialize(self):
-        print(self.__class__.__name__)
-        path = os.getcwd() + '/maps/' + self.__class__.__name__ +"_"+str(self.width)+"_"+str(self.height) +'.txt'
+        if self.path:
+            path = self.path
+        else:
+            path = os.getcwd() + '/maps/' + self.__class__.__name__ +"_"+str(self.width)+"_"+str(self.height) +'.txt'
         with open(path, 'w') as f:
             f.write(f"{self.width} {self.height}\n")
             for row in self.matrix:
@@ -37,6 +40,15 @@ class map:
                     else:
                         line += "."
                 f.write(line + '\n')
+        config_path = os.getcwd() + '/maps/' + self.__class__.__name__ +"_"+str(self.width)+"_"+str(self.height) +'.config'
+        with open(config_path, 'w') as f:
+            f.write(f"N_NODE = {len(self.nodes)}\n")
+            f.write(f"VEC_LEN = {len(self.nodes)}\n")
+            f.write(f"N_AGENT = {int(len(self.nodes)*EnvParameters.AGENT_RATE)}\n")
+            f.write(f"WORLD_HIGH = {self.height}\n")
+            f.write(f"WORLD_WIDE = {self.width}\n")
+            f.write(f"MAP_CLASS = {self.__class__.__name__}\n")
+
     def load(self, path):
         with open(path, 'r') as f:
             self.width, self.height = f.readline().split()
@@ -59,12 +71,14 @@ class map:
         print("generate_map at base map class, you should implement this method in child class")
         
 # create a random maze
-# 0: path, 1: wall, -2: eject, -3: induct
+# 0: path, -1: wall, -2: eject, -3: induct
 # algorithm: dfs, prim
 class Maze(map):
-    def __init__(self, width=EnvParameters.WORLD_WIDE, height=EnvParameters.WORLD_HIGH,seed=42,obstacle_rate=0.5,function='prim',path = None):
+    def __init__(self, width=runParameters.WORLD_WIDE, height=runParameters.WORLD_HIGH,
+                 seed=42,obstacle_rate=0.5,function='prim',pad=True,path = None):
         self.totalpath = width * height * (1-obstacle_rate)
         self.function = function
+        self.pad = pad
         super().__init__(width, height,seed,path=path)      
         
     def generate_map(self):
@@ -74,9 +88,14 @@ class Maze(map):
             self.generate_maze_prim(1, 1)
         else:
             raise ValueError("Function not supported")
-        self.travels=0
-        for i in self.matrix:
-            self.travels+=list(i).count(0)
+        self.nodes = []
+        self.obstacles = []
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.matrix[i,j] == 0:
+                    self.nodes.append((i,j))
+                elif self.matrix[i,j] == -1:
+                    self.obstacles.append((i,j))
     
     def generate_maze_dfs(self, x, y):
         directions = [(0, -2), (2, 0), (0, 2), (-2, 0)]
@@ -88,7 +107,7 @@ class Maze(map):
                 self.matrix[y + dy // 2][x + dx // 2] = 0
                 self.generate_maze_dfs(nx, ny)
             
-    def generate_maze_prim(self,x,y):
+    def generate_maze_prim(self, x, y):
         self.matrix[y][x] = 0
         walls = self.get_neighbors((x,y), -1)
         path_count = 0
@@ -97,13 +116,16 @@ class Maze(map):
             neighbors = self.get_neighbors(wall, 0)
             if len(neighbors) == 1:
                 self.matrix[wall[0]][wall[1]] = 0
-                walls += self.get_neighbors(wall, 1)
+                walls += self.get_neighbors(wall, -1)
                 path_count += 1
                 if path_count >= self.totalpath:
                     break
             walls.remove(wall)
         if path_count < self.totalpath:
-            walls = [(x, y) for x in range(1, self.width-1) for y in range(1, self.height-1) if self.matrix[y][x] == -1]
+            if self.pad:
+                walls = [(x, y) for x in range(1, self.width-1) for y in range(1, self.height-1) if self.matrix[y][x] == -1]
+            else:
+                walls = [(x, y) for x in range(0, self.width) for y in range(0, self.height) if self.matrix[y][x] == -1]
             while path_count < self.totalpath:
                 wall = random.choice(walls)
                 self.matrix[wall[1]][wall[0]] = 0
@@ -127,14 +149,67 @@ class Maze(map):
         neighbors = []
         for direction in directions:
             neighbor = (cell[0] + direction[0], cell[1] + direction[1])
-            if 0 < neighbor[0] < self.height-1 and 0 < neighbor[1] < self.width-1:
-                if self.matrix[neighbor[0]][neighbor[1]] == value:
-                    neighbors.append(neighbor)
-        return neighbors   
+            if self.pad:
+                if 0 < neighbor[0] < self.height-1 and 0 < neighbor[1] < self.width-1:
+                    if self.matrix[neighbor[0]][neighbor[1]] == value:
+                        neighbors.append(neighbor)
+            else:
+                if 0 <= neighbor[0] < self.height and 0 <= neighbor[1] < self.width:
+                    if self.matrix[neighbor[0]][neighbor[1]] == value:
+                        neighbors.append(neighbor)
+        return neighbors 
 
+'''
+    Proportion_Maze:
+    create a maze with a proportion of the original maze
+    width: width of the target maze
+    height: height of the target maze
+    proportion: the proportion of the original maze
+    seed: random seed
+    obstacle_rate: the rate of obstacles in the original maze
+    function: maze generation algorithm (dfs, prim)
+    pad: whether to pad the maze. If True, the maze will be padded with walls, otherwise it would be double wall
+    path: where to read or save the maze
+'''
+class Proportion_Maze(Maze):
+    def __init__(self, width=runParameters.WORLD_WIDE, height=runParameters.WORLD_HIGH,
+                 proportion=2,seed=42,obstacle_rate=0.5,function='prim',pad=False,path = None):
+        if pad:
+            width -= 2
+            height -= 2
+        if width % proportion != 0 or height % proportion != 0:
+            print("width and height should be divisible by proportion")
+        self.proportion = proportion      
+        super().__init__(width//proportion, height//proportion,seed,obstacle_rate,function,not pad,path)
+        self.pad = pad
+        self.scale_map()
+
+    def scale_map(self):
+        if self.pad: 
+            new_matrix = np.full((self.height*self.proportion+2, self.width*self.proportion+2), -1, dtype=np.int32)
+        else:
+            new_matrix = np.full((self.height*self.proportion, self.width*self.proportion), -1, dtype=np.int32)
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.matrix[i,j] == 0:
+                    if self.pad:
+                        new_matrix[i*self.proportion+1:(i+1)*self.proportion+1, j*self.proportion+1:(j+1)*self.proportion+1] = 0
+                    else:
+                        new_matrix[i*self.proportion:(i+1)*self.proportion, j*self.proportion:(j+1)*self.proportion] = 0
+        self.matrix = new_matrix
+        self.height, self.width = self.matrix.shape
+        self.nodes = []
+        self.obstacles = []
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.matrix[i,j] == 0:
+                    self.nodes.append((i,j))
+                elif self.matrix[i,j] == -1:
+                    self.obstacles.append((i,j))
+        
 # warehouse map
 class Warehouse(map):
-    def __init__(self, width=EnvParameters.WORLD_WIDE, height=EnvParameters.WORLD_HIGH
+    def __init__(self, width=runParameters.WORLD_WIDE, height=runParameters.WORLD_HIGH
                  ,obstacle_gap = EnvParameters.GAP,path = None):
         self.obstacle_gap = obstacle_gap
         super().__init__(width, height,seed=None,path=path) 
@@ -179,10 +254,9 @@ class Warehouse(map):
         self.eject_induct_map = self.eject_map + self.induct_map
         
 if __name__ == "__main__":
-    maze = Maze(EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE, seed=42, obstacle_rate=EnvParameters.OBSTACLE_RATE)
+    maze = Maze(25, 25,seed=42, obstacle_rate=0.5,pad=True)
     maze.print_map()
+    print(maze.matrix.shape)
     maze.serialize()
-    
-    print(maze.matrix)
-    print(maze.travels)
+    print(len(maze.nodes))
     

@@ -44,7 +44,7 @@ class MAP_ACNet(nn.Module):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
-        self.fully_connected_1 = init_(nn.Linear(CopParameters.VEC_LEN, CopParameters.NET_VEC))
+        self.fully_connected_1 = init_(nn.Linear(runParameters.VEC_LEN, CopParameters.NET_VEC))
         self.fully_connected_2 = init_(nn.Linear(CopParameters.NET_SIZE, CopParameters.NET_SIZE))
         self.fully_connected_3 = init_(nn.Linear(CopParameters.NET_SIZE, CopParameters.NET_SIZE))
         self.lstm_memory = nn.LSTMCell(input_size=CopParameters.NET_SIZE, hidden_size=CopParameters.NET_SIZE)
@@ -69,7 +69,7 @@ class MAP_ACNet(nn.Module):
         """run neural network"""
         num_agent = x.shape[1]
         x = torch.reshape(x, (-1, CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV))
-        x_1 = torch.reshape(x_1, (-1, CopParameters.VEC_LEN))
+        x_1 = torch.reshape(x_1, (-1, runParameters.VEC_LEN))
         identity = self.downsample1(x)  
         x = self.conv1(x)
         x = self.relu(x)
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     obs = torch.torch.rand(
         (3,384, CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV),
         dtype=torch.float32)
-    vec = torch.torch.rand((3,384, CopParameters.VEC_LEN), dtype=torch.float32)
+    vec = torch.torch.rand((3,384, runParameters.VEC_LEN), dtype=torch.float32)
     hidden_state = (
         torch.torch.rand((384 * 3, CopParameters.NET_SIZE)),
         torch.torch.rand((384* 3, CopParameters.NET_SIZE)))  # [B*A,3]

@@ -27,4 +27,4 @@ else
     echo "Directory content has not changed. No need to rebuild."
 fi
 
-python eval_PIBT.py
+python eval_PIBT.py "$@"

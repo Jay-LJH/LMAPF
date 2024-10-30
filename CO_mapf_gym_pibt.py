@@ -5,6 +5,7 @@ from alg_parameters import *
 import os
 from world_property import State
 import itertools
+from util import *
 
 MAPdirDict = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1), 4: (-1, 0)}  #  0 wait ,1 right, 2 down, 3 left, 4 up
 actionDict = {v: k for k, v in MAPdirDict.items()}
@@ -13,7 +14,18 @@ numbers = [0, 1, 2, 3, 4]
 actions_combination_list = list(itertools.permutations(numbers, 3))
 
 class CO_MAPFEnv(gym.Env):
-    def __init__(self,env_id,episode_len,path="maps/Maze_25_25.txt"):      
+    def __init__(self,env_id,episode_len,file_name=None):
+        if file_name is None:
+            path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
+            config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
+        else:
+            path = "maps/" + file_name + ".txt"
+            config = "maps/" + file_name + ".config"
+        if os.path.exists(config):
+                read_config(config)
+        print("map path: ", path)
+        print("config path: ", config)
+        self.world_high,self.world_wide,self.total_map=read_map(path) 
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
@@ -21,35 +33,12 @@ class CO_MAPFEnv(gym.Env):
         self.env_id=env_id
         self.episode_len=episode_len
         self.project_path = os.getcwd() + "/h_maps"
-        self.num_agents=EnvParameters.N_AGENT
-        self.world_high,self.world_wide,self.total_map=self.read_map(path)
+        self.num_agents=runParameters.N_AGENT
         self.finished_task=0
         self.wait_map=np.zeros((self.world_high,self.world_wide))
         self.build_sorting_map()
         self.build_guide_map()
-        
-    def read_map(self,file_path):
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-        dimensions = lines[0].strip().split()
-        rows = int(dimensions[0])
-        cols = int(dimensions[1])
 
-        map_data = []
-        for line in lines[1:rows+1]:
-            map_data.append(list(line.strip()))
-        for i in range(rows):
-            for j in range(cols):
-                if map_data[i][j] == '@':
-                    map_data[i][j] = self.obstacle_value
-                elif map_data[i][j] == 'e':
-                    map_data[i][j] = self.eject_value
-                elif map_data[i][j] == 'i':
-                    map_data[i][j] = self.induct_value
-                else:
-                    map_data[i][j] = self.travel_value
-        return rows, cols, np.array(map_data,dtype=np.int32)
-    
     def build_sorting_map(self):
         self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         eject_station_id=10000
@@ -101,7 +90,7 @@ class CO_MAPFEnv(gym.Env):
                     self.nearby_node_dict[node_index].append(self.node_index_dict[item])
 
     def global_reset_fix(self,seed):
-        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, EnvParameters.N_AGENT, 1,self.total_map, ".")
+        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, runParameters.N_AGENT, 1,self.total_map, ".")
         self.rhcr.update_start_goal(EnvParameters.H)
         self.agent_state=np.zeros((self.world_high,self.world_wide))
         self.agent_poss=self.rhcr.rl_agent_poss

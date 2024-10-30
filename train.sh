@@ -26,4 +26,4 @@ else
     echo "Directory content has not changed. No need to rebuild."
 fi
 
-python driver.py
+python driver.py "$@"

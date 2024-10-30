@@ -16,7 +16,7 @@ class Runner(object):
         self.env_map= CO_MAPFEnv(env_id,RUN_STEP)
         self.local_device = torch.device('cuda') if SetupParameters.USE_GPU_LOCAL else torch.device('cpu')
         self.local_map_model = MapModel(env_id, self.local_device)
-        restore_path = 'models/LMAPF/Maze25-10-241807/final'
+        restore_path = 'models/LMAPF/Maze27-10-240144/final'
         map_net_path_checkpoint = restore_path + "/map_net_checkpoint.pkl"
         map_net_dict = torch.load(map_net_path_checkpoint)
         self.local_map_model.network.load_state_dict(map_net_dict['model'])
@@ -25,12 +25,12 @@ class Runner(object):
         with torch.no_grad():
             self.env_map.global_reset_fix(seed)
             map_hidden_state = (
-                torch.zeros((CopParameters.N_NODE, CopParameters.NET_SIZE)).to(self.local_device),
-                torch.zeros((CopParameters.N_NODE, CopParameters.NET_SIZE)).to(self.local_device))
+                torch.zeros((runParameters.N_NODE, CopParameters.NET_SIZE)).to(self.local_device),
+                torch.zeros((runParameters.N_NODE, CopParameters.NET_SIZE)).to(self.local_device))
             map_obs, map_vector= self.env_map.observe_for_map()
             map_done = False
             while map_done==False:
-                map_action, _, _, map_hidden_state = self.local_map_model.step(map_obs, map_vector,map_hidden_state,CopParameters.N_NODE)
+                map_action, _, _, map_hidden_state = self.local_map_model.step(map_obs, map_vector,map_hidden_state,runParameters.N_NODE)
                 map_done, rl_local_restart, map_obs, map_vector = self.env_map.joint_step(map_action)
                 if rl_local_restart and not map_done:
                     self.env_map.local_reset()

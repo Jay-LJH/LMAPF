@@ -46,3 +46,44 @@ def window_map_perf():
     perf_dict={'throughput':[], "wait":[],"congestion":[],"reward":[]}
     return perf_dict
 
+def read_map(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+    dimensions = lines[0].strip().split()
+    rows = int(dimensions[0])
+    cols = int(dimensions[1])
+    map_data = []
+    for line in lines[1:rows+1]:
+        map_data.append(list(line.strip()))
+    for i in range(rows):
+        for j in range(cols):
+            if map_data[i][j] == '@':
+                map_data[i][j] = EnvParameters.obstacle_value
+            elif map_data[i][j] == 'e':
+                map_data[i][j] = EnvParameters.eject_value
+            elif map_data[i][j] == 'i':
+                map_data[i][j] = EnvParameters.induct_value
+            elif map_data[i][j] == '.':
+                map_data[i][j] = EnvParameters.travel_value
+    return rows, cols, np.array(map_data,dtype=np.int32)
+
+def read_config(config_path):
+        data_dict = {}
+        with open(config_path, 'r') as file:
+             for line in file:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    key, value = line.split('=')
+                    key = key.strip()
+                    value = value.strip()
+                    data_dict[key] = convert_if_number(value)
+
+        for key in data_dict:
+            setattr(runParameters, key, data_dict[key])
+        return data_dict
+
+def convert_if_number(s):
+    try:
+        return int(s)
+    except ValueError:
+        return s

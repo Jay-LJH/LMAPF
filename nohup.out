@@ -1,56 +1,92 @@
 Directory content has not changed. No need to rebuild.
-/home/marmot/ljh/LMAPF/map_net.py:67: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-  @autocast()
-2024-10-24 17:40:50,096	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
-wandb: Using wandb-core as the SDK backend. Please refer to https://wandb.me/wandb-core for more information.
+2024-10-29 22:28:19,166	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
 wandb: Currently logged in as: liujay (liujay-National University of Singapore Students' Union). Use `wandb login --relogin` to force relogin
-wandb: Tracking run with wandb version 0.18.5
-wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241024_174054-mrilozob
+wandb: wandb version 0.18.5 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.4
+wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241029_222824-ksxq5rn3
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run polar-plant-9
+wandb: Syncing run peachy-armadillo-20
 wandb: ⭐️ View project at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF
-wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/mrilozob
-/home/marmot/ljh/LMAPF/map_model.py:21: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  self.net_scaler = GradScaler()  # automatic mixed precision
-[36m(pid=3975402)[0m /home/marmot/ljh/LMAPF/map_net.py:67: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-[36m(pid=3975402)[0m   @autocast()
-/home/marmot/ljh/LMAPF/map_model.py:79: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-  with autocast():
-*** SIGTERM received at time=1729829395 on cpu 1 ***
-PC: @     0x7ed6e1091117  (unknown)  (unknown)
-    @     0x7ed6e1042520  (unknown)  (unknown)
+wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/ksxq5rn3
+wandb: ERROR Error while calling W&B API: context deadline exceeded (<Response [500]>)
+*** SIGTERM received at time=1730263756 on cpu 17 ***
+PC: @     0x75a28d091117  (unknown)  (unknown)
+    @     0x75a28d042520  (unknown)  (unknown)
     @ ... and at least 1 more frames
-[2024-10-25 11:09:55,751 E 3975062 3975062] logging.cc:440: *** SIGTERM received at time=1729829395 on cpu 1 ***
-[2024-10-25 11:09:55,751 E 3975062 3975062] logging.cc:440: PC: @     0x7ed6e1091117  (unknown)  (unknown)
-[2024-10-25 11:09:55,751 E 3975062 3975062] logging.cc:440:     @     0x7ed6e1042520  (unknown)  (unknown)
-[2024-10-25 11:09:55,751 E 3975062 3975062] logging.cc:440:     @ ... and at least 1 more frames
-wandb: - 0.004 MB of 0.004 MB uploaded./run.sh: line 30: 3975062 Aborted                 (core dumped) python driver.py
+[2024-10-30 11:49:16,833 E 3806922 3806922] logging.cc:440: *** SIGTERM received at time=1730263756 on cpu 17 ***
+[2024-10-30 11:49:16,833 E 3806922 3806922] logging.cc:440: PC: @     0x75a28d091117  (unknown)  (unknown)
+[2024-10-30 11:49:16,833 E 3806922 3806922] logging.cc:440:     @     0x75a28d042520  (unknown)  (unknown)
+[2024-10-30 11:49:16,833 E 3806922 3806922] logging.cc:440:     @ ... and at least 1 more frames
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.001 MB of 0.017 MB uploaded (0.000 MB deduped)./run.sh: line 29: 3806922 Aborted                 (core dumped) python driver.py
+Exception in thread MsgRouterThr:
+Traceback (most recent call last):
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    self.run()
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/threading.py", line 982, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/wandb/sdk/interface/router.py", line 70, in message_loop
+    msg = self._read_message()
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/wandb/sdk/interface/router_queue.py", line 36, in _read_message
+    msg = self._response_queue.get(timeout=1)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/multiprocessing/queues.py", line 117, in get
+    res = self._recv_bytes()
+          ^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/multiprocessing/connection.py", line 212, in recv_bytes
+    self._check_closed()
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/multiprocessing/connection.py", line 137, in _check_closed
+    raise OSError("handle is closed")
+OSError: handle is closed
 Directory content has not changed. No need to rebuild.
-/home/marmot/ljh/LMAPF/map_net.py:67: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-  @autocast()
-2024-10-25 18:07:02,908	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
-/home/marmot/ljh/LMAPF/driver.py:25: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
-  map_net_dict = torch.load(map_net_path_checkpoint)
-wandb: Using wandb-core as the SDK backend. Please refer to https://wandb.me/wandb-core for more information.
+2024-10-30 13:34:52,444	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+Usage stats collection is disabled.
+Welcome to LMAPF!
+
+[33m(raylet)[0m The node with node id: 6fd9e2aed26f9c0e3d4c917625d6a796512855e4fe76b66be8871d3e and address: 172.16.185.204 and node name: 172.16.185.204 has been marked dead because the detector has missed too many heartbeats from it. This can happen when a 	(1) raylet crashes unexpectedly (OOM, etc.) 
+	(2) raylet has lagging heartbeats due to slow network or busy workload.
+Saving Final Model !
+
+Traceback (most recent call last):
+  File "/home/marmot/ljh/LMAPF/driver.py", line 182, in <module>
+    main(sys.argv)
+  File "/home/marmot/ljh/LMAPF/driver.py", line 85, in main
+    job_results = ray.get(done_id)
+                  ^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 21, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/ray/_private/worker.py", line 2745, in get
+    values, debugger_breakpoint = worker.get_objects(object_refs, timeout=timeout)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/ray/_private/worker.py", line 903, in get_objects
+    raise value
+ray.exceptions.ActorDiedError: The actor died unexpectedly before finishing this task.
+	class_name: RLRunner
+	actor_id: 738deeb51a0c8a0b0800c65c01000000
+	pid: 1047531
+	namespace: 133de087-d688-4a8e-ab8d-81d0487ab85d
+	ip: 172.16.185.204
+The actor died because its node has died. Node Id: 6fd9e2aed26f9c0e3d4c917625d6a796512855e4fe76b66be8871d3e
+	the actor's node was terminated unexpectedly: dashboard_agent/424238335 failed and raylet fate-shares with it.
+[33m(raylet)[0m [2024-10-30 13:35:43,653 E 1047419 1047496] (raylet) agent_manager.cc:83: The raylet exited immediately because one Ray agent failed, agent_name = dashboard_agent/424238335.
+[33m(raylet)[0m The raylet fate shares with the agent. This can happen because
+[33m(raylet)[0m - The version of `grpcio` doesn't follow Ray's requirement. Agent can segfault with the incorrect `grpcio` version. Check the grpcio version `pip freeze | grep grpcio`.
+[33m(raylet)[0m - The agent failed to start because of unexpected error or port conflict. Read the log `cat /tmp/ray/session_latest/logs/{dashboard_agent|runtime_env_agent}.log`. You can find the log file structure here https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure.
+[33m(raylet)[0m - The agent is killed by the OS (e.g., out of memory).
+Directory content has not changed. No need to rebuild.
+2024-10-30 13:36:29,995	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
 wandb: Currently logged in as: liujay (liujay-National University of Singapore Students' Union). Use `wandb login --relogin` to force relogin
-wandb: Tracking run with wandb version 0.18.5
-wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241025_180707-5telc39o
+wandb: wandb version 0.18.5 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.4
+wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241030_133635-s2xbqbbn
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run grateful-wood-14
+wandb: Syncing run hollow-dance-21
 wandb: ⭐️ View project at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF
-wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/5telc39o
-/home/marmot/ljh/LMAPF/map_model.py:21: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
-  self.net_scaler = GradScaler()  # automatic mixed precision
-[36m(pid=2307460)[0m /home/marmot/ljh/LMAPF/map_net.py:67: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-[36m(pid=2307460)[0m   @autocast()
-/home/marmot/ljh/LMAPF/map_model.py:79: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
-  with autocast():
-*** SIGTERM received at time=1729917563 on cpu 2 ***
-PC: @     0x7e496cc91117  (unknown)  (unknown)
-    @     0x7e496cc42520  (unknown)  (unknown)
-    @ ... and at least 1 more frames
-[2024-10-26 11:39:23,514 E 2307134 2307134] logging.cc:440: *** SIGTERM received at time=1729917563 on cpu 2 ***
-[2024-10-26 11:39:23,514 E 2307134 2307134] logging.cc:440: PC: @     0x7e496cc91117  (unknown)  (unknown)
-[2024-10-26 11:39:23,514 E 2307134 2307134] logging.cc:440:     @     0x7e496cc42520  (unknown)  (unknown)
-[2024-10-26 11:39:23,514 E 2307134 2307134] logging.cc:440:     @ ... and at least 1 more frames
-wandb: - 0.015 MB of 0.015 MB uploaded./run.sh: line 30: 2307134 Aborted                 (core dumped) python driver.py
+wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/s2xbqbbn

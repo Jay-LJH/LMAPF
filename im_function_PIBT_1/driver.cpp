@@ -6,6 +6,7 @@
 #include "./src/rhcr_class.cpp"
 #include "./src/SortingGraph.cpp"
 #include "./src/States.cpp"
+#include "pibt_mapd.h"
 #include "./src/pibt_mapd.cpp"
 #include "MazeGraph.h"
 #include "./src/MazeGraph.cpp"

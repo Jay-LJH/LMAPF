@@ -7,20 +7,19 @@ from CO_mapf_gym_file import CO_MAPFEnv
 from util import set_global_seeds
 from map_model import MapModel
 
-
 class Runner(object):
     """sub-process used to collect experience"""
 
-    def __init__(self, env_id):
+    def __init__(self, env_id,file_name=None):
         """initialize model and environment"""
         self.ID = env_id
         set_global_seeds(env_id*123)
-        self.env_map= CO_MAPFEnv(env_id)
+        self.env_map= CO_MAPFEnv(env_id,file_name=file_name)
         self.local_device = torch.device('cuda') if SetupParameters.USE_GPU_LOCAL else torch.device('cpu')
         self.local_map_model = MapModel(env_id, self.local_device)
         self.map_done = False
-        self.num_agent = EnvParameters.N_AGENT
-        self.num_node = CopParameters.N_NODE
+        self.num_agent = runParameters.N_AGENT
+        self.num_node = runParameters.N_NODE
         self.map_reset()
 
     def map_run(self): # run one episode, global reset -map eval-mapupdate- agent eval -step-condition- map eval -update map-modify obs
@@ -101,8 +100,8 @@ class Runner(object):
 
 @ray.remote(num_cpus=1, num_gpus=SetupParameters.NUM_GPU / (TrainingParameters.N_ENVS + 1))
 class RLRunner(Runner):
-    def __init__(self, meta_agent_id):
-        super().__init__(meta_agent_id)
+    def __init__(self, meta_agent_id,file_name=None):
+        super().__init__(meta_agent_id,file_name)
 
 if __name__ == "__main__":
     import os

@@ -7,6 +7,7 @@ from collections import deque
 import os
 from world_property import State
 import itertools
+import random
 
 MAPdirDict = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1), 4: (-1, 0)} # 0 wait ,1 right, 2 down, 3 left, 4 up
 actionDict = {v: k for k, v in MAPdirDict.items()}
@@ -17,57 +18,63 @@ actions_combination_list = list(itertools.permutations(numbers, 3))
 
 class CO_MAPFEnv(gym.Env):
     """map MAPF problems to a standard RL environment"""
-    def __init__(self,env_id, selected_vertex,  episode_len, gap=EnvParameters.GAP):
-        """initialization"""
-        self.obstacle_gap = gap
-        self.episode_len = episode_len
+    def __init__(self,env_id, selected_vertex,path=None):
+        if path is None:
+            path = "maps/Maze_"+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"      
+        self.induct_value = -3
+        self.eject_value = -2
+        self.obstacle_value = -1
+        self.travel_value = 0
         self.env_id=env_id
+        self.selected_vertex= selected_vertex
         self.project_path = os.getcwd() + "/h_maps"
-        self.num_agents=EnvParameters.N_AGENT
-        self.world_high = EnvParameters.WORLD_HIGH
-        self.world_wide = EnvParameters.WORLD_WIDE
-        self.selected_vertex = selected_vertex
-        self.num_node=len(selected_vertex)
+        self.num_agents=runParameters.N_AGENT
+        self.world_high,self.world_wide,self.total_map=self.read_map(path)
+        self.finished_task=0
+        self.wait_map=np.zeros((self.world_high,self.world_wide))
         self.build_sorting_map()
         self.build_guide_map()
+    def read_map(self,file_path):
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+        dimensions = lines[0].strip().split()
+        rows = int(dimensions[0])
+        cols = int(dimensions[1])
 
+        map_data = []
+        for line in lines[1:rows+1]:
+            map_data.append(list(line.strip()))
+        for i in range(rows):
+            for j in range(cols):
+                if map_data[i][j] == '@':
+                    map_data[i][j] = self.obstacle_value
+                elif map_data[i][j] == 'e':
+                    map_data[i][j] = self.eject_value
+                elif map_data[i][j] == 'i':
+                    map_data[i][j] = self.induct_value
+                else:
+                    map_data[i][j] = self.travel_value
+        return rows, cols, np.array(map_data,dtype=np.int32)
+    
     def build_sorting_map(self):
-        map_1 = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
-        map_2 = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
-        for row in range(3, self.world_high - 3, self.obstacle_gap):
-            map_1[row, 1:self.world_wide - 1] = -2
-        for col in range(2, self.world_wide - 2, self.obstacle_gap):
-            map_2[2:self.world_high - 2, col] = -2
-        self.total_map = map_1 + map_2
-        self.total_map[self.total_map == -4] = -1
-        for i in range(self.world_wide):
-            if self.total_map[2, i] == -2: # induct
-                self.total_map[0, i] = -3
-                self.total_map[-1, i] = -3
-
         eject_station_id=10000
         induct_station_id=1000
+        # -1: obstacle, -2: eject station, -3: induct station
         for i in range(self.world_high):
             for j in range(self.world_wide):
-                if self.total_map[i,j]==-1:
-                    self.station_map[i,j+1]= eject_station_id
-                    self.station_map[i, j - 1] = eject_station_id
-                    self.station_map[i-1, j] = eject_station_id
-                    self.station_map[i+1, j] = eject_station_id
+                if self.total_map[i, j] == self.eject_value:
+                    self.station_map[i, j] = eject_station_id
                     eject_station_id+=1
-                    assert (self.total_map[i,j+1]==-2 and self.total_map[i, j - 1] == -2 and self.total_map[i-1, j] == -2 and self.total_map[i+1, j] == -2)
-                if self.total_map[i,j]==-3:
-                    self.station_map[i,j]= induct_station_id
+                elif self.total_map[i, j] == self.induct_value:
+                    self.station_map[i, j] = induct_station_id
                     induct_station_id+=1
-
-        self.total_map[0, 0] = self.total_map[0, -1] = self.total_map[-1, 0] = self.total_map[-1, -1] = -1
         self.obstacle_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         self.eject_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         self.induct_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
-        self.obstacle_map[self.total_map == -1] = 1
-        self.eject_map[self.total_map == -2] = 1
-        self.induct_map[self.total_map == -3] = 1
+        self.obstacle_map[self.total_map == self.obstacle_value] = 1
+        self.eject_map[self.total_map == self.eject_value] = 1
+        self.induct_map[self.total_map == self.induct_value] = 1
         self.eject_induct_map = self.eject_map + self.induct_map
 
     def build_guide_map(self):
@@ -106,9 +113,10 @@ class CO_MAPFEnv(gym.Env):
             self.local_to_global.append(global_i)
             self.global_to_local[global_i]=i
 
-
-    def global_reset_fix(self, seed):
-        self.rhcr=lifelong_pibt_1.RHCR_class_pibt_learn(seed, self.num_agents, self.world_high, self.world_wide,self.env_id,self.total_map, self.station_map,self.project_path)
+    def global_reset(self, rand = False,seed = 42):
+        if rand:
+            seed = random.randint(0, 100000)
+        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, runParameters.N_AGENT, 1,self.total_map, ".")
         self.rhcr.update_start_goal(EnvParameters.H)
         self.agent_state=np.zeros((self.world_high,self.world_wide))
         self.agent_poss=self.rhcr.rl_agent_poss
@@ -145,7 +153,7 @@ class CO_MAPFEnv(gym.Env):
         self.agent_state = np.zeros((self.world_high, self.world_wide))
         action = np.zeros(self.num_agents, dtype=np.int32)
 
-        action_guidance=np.zeros((self.num_agents,CopParameters.MAP_ACTION),dtype=np.int32) # the bigger the number the high the priority
+        action_guidance=np.zeros((self.num_agents,CopParameters.MAP_ACTION),dtype=np.int32) # the bigger the number, higher the priority
         for i in range(self.num_agents):
             ax = self.agent_poss[i][0]
             ay = self.agent_poss[i][1]
@@ -153,10 +161,10 @@ class CO_MAPFEnv(gym.Env):
             if node_index in self.local_to_global:
                 local_node_index=self.global_to_local[node_index]
                 act_order=actions_combination_list[int(map_action[local_node_index])]
-                action_guidance[i,act_order[0]]=CopParameters.TOP_NUM
-                action_guidance[i, act_order[1]] = CopParameters.TOP_NUM-1
+                action_guidance[i, act_order[0]] = CopParameters.TOP_NUM
+                action_guidance[i, act_order[1]] = CopParameters.TOP_NUM - 1
                 action_guidance[i, act_order[2]] = CopParameters.TOP_NUM - 2
-
+     
         # solve conflict by PIBT
         coll_times = self.rhcr.run_pibt(action_guidance)
         self.agent_poss=self.rhcr.rl_path
@@ -183,7 +191,7 @@ class CO_MAPFEnv(gym.Env):
         self.joint_move(map_action)
         actor_obs,actor_vec = self.observe_for_map()
 
-        if self.time_step >= self.episode_len:
+        if self.time_step >= CopParameters.EPISODE_LEN:
             done = True
         else:
             done = False
@@ -195,16 +203,16 @@ class CO_MAPFEnv(gym.Env):
 
     def observe_for_map(self):
         map_obs = np.zeros((1, self.num_node,CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV), dtype=np.float32)
-        map_vector=np.expand_dims(np.eye(CopParameters.N_NODE,dtype=np.float32), axis=0)
+        map_vector=np.expand_dims(np.eye(runParameters.N_NODE,dtype=np.float32), axis=0)
         map_vector=map_vector[:,self.local_to_global,:]
         if self.time_step != 0:
             sum_util_map = np.sum(self.uti_deque, axis=0)
             sum_util_map = 40 * sum_util_map / self.num_agents
         else:
             sum_util_map = np.zeros((5, self.world_high, self.world_wide))
-        all_first_map = np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
-        all_worse_map = np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
-        all_order_map= np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
+        all_first_map = np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
+        all_worse_map = np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
+        all_order_map= np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
         agents_order = [i for i in range(self.num_agents)]
         agents_order.sort(key=lambda x: (self.world.heuristic_map[self.rhcr.rl_agent_goals[x][self.goals_id[x]]][
                                           self.agent_poss[x][0] * self.world_wide + self.agent_poss[x][1]], -self.elapsed[x],

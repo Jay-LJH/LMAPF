@@ -1,26 +1,24 @@
 import os
 import os.path as osp
-
+import sys
 import numpy as np
 import ray
 import setproctitle
 import torch
 import wandb
-
 from alg_parameters import *
 from map_model import MapModel
 from runner import RLRunner
-from util import set_global_seeds, map_perf, write_to_wandb_map, window_map_perf
+from util import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 ray.init(num_gpus=SetupParameters.NUM_GPU)
 print("Welcome to LMAPF!\n")
 
-
-def main():
+def main(sys_argv):
     """main code"""
     if RecordingParameters.RETRAIN:
-        restore_path = 'models/LMAPF/Maze24-10-241708/final'
+        restore_path = 'models/LMAPF/Maze25-10-241807/final'
         map_net_path_checkpoint = restore_path + "/map_net_checkpoint.pkl"
         map_net_dict = torch.load(map_net_path_checkpoint)
 
@@ -39,7 +37,18 @@ def main():
     set_global_seeds(SetupParameters.SEED)
     if not os.path.exists("./h_maps"):
         os.makedirs("./h_maps")
-
+    if sys_argv.__len__() > 1:
+        file_name = sys_argv[1]
+    else:
+        file_name = None
+    if file_name is None:
+            path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
+            config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
+    else:
+        path = "maps/" + file_name + ".txt"
+        config = "maps/" + file_name + ".config"
+    if os.path.exists(config):
+        read_config(config)
     global_device = torch.device('cuda') if SetupParameters.USE_GPU_GLOBAL else torch.device('cpu')
     local_device = torch.device('cuda') if SetupParameters.USE_GPU_LOCAL else torch.device('cpu')
     global_map_model = MapModel(0, global_device, True)
@@ -47,9 +56,9 @@ def main():
     if RecordingParameters.RETRAIN:
         global_map_model.network.load_state_dict(map_net_dict['model'])
         global_map_model.net_optimizer.load_state_dict(map_net_dict['optimizer'])
-
-    envs = [RLRunner.remote(i + 1) for i in range(TrainingParameters.N_ENVS)]
-
+    
+    envs = [RLRunner.remote(i + 1,file_name) for i in range(TrainingParameters.N_ENVS)]
+    
     if RecordingParameters.RETRAIN:
         curr_steps = map_net_dict["step"]
         curr_episodes = map_net_dict["episode"]
@@ -69,7 +78,6 @@ def main():
                 map_update += 1
                 for i, env in enumerate(envs):
                     job_list.append(env.map_run.remote())
-
             # get data from multiple processes
             done_id, job_list = ray.wait(job_list, num_returns=TrainingParameters.N_ENVS)
             update_done = True if job_list == [] else False
@@ -171,4 +179,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)

@@ -16,8 +16,10 @@ actions_combination_list = list(itertools.permutations(numbers, 3))
 
 
 class CO_MAPFEnv(gym.Env):
-    """map MAPF problems to a standard RL environment"""
-    def __init__(self,env_id,episode_len,path="maps/Maze_25_25.txt"):      
+    """map MAPF problems to a standard RL environment"""    
+    def __init__(self,env_id,episode_len,path=None):
+        if path is None:
+            path = "maps/Maze_"+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"      
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
@@ -25,7 +27,7 @@ class CO_MAPFEnv(gym.Env):
         self.env_id=env_id
         self.episode_len=episode_len
         self.project_path = os.getcwd() + "/h_maps"
-        self.num_agents=EnvParameters.N_AGENT
+        self.num_agents=runParameters.N_AGENT
         self.world_high,self.world_wide,self.total_map=self.read_map(path)
         self.finished_task=0
         self.wait_map=np.zeros((self.world_high,self.world_wide))
@@ -105,7 +107,7 @@ class CO_MAPFEnv(gym.Env):
                     self.nearby_node_dict[node_index].append(self.node_index_dict[item])
 
     def global_reset_fix(self, seed):
-        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, EnvParameters.N_AGENT, 1,self.total_map, ".")
+        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, runParameters.N_AGENT, 1,self.total_map, ".")
         self.rhcr.update_start_goal(EnvParameters.H)
         self.agent_state=np.zeros((self.world_high,self.world_wide))
         self.agent_poss=self.rhcr.rl_agent_poss
@@ -191,22 +193,22 @@ class CO_MAPFEnv(gym.Env):
 
 
     def observe_for_map(self):
-        map_obs = np.zeros((1, CopParameters.N_NODE,CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV), dtype=np.float32)
-        map_vector=np.expand_dims(np.eye(CopParameters.N_NODE,dtype=np.float32), axis=0)
+        map_obs = np.zeros((1, runParameters.N_NODE,CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV), dtype=np.float32)
+        map_vector=np.expand_dims(np.eye(runParameters.N_NODE,dtype=np.float32), axis=0)
         if self.time_step != 0:
             sum_util_map = np.sum(self.uti_deque, axis=0)
             sum_util_map = 40 * sum_util_map / self.num_agents
         else:
             sum_util_map = np.zeros((5, self.world_high, self.world_wide))
-        all_first_map = np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
-        all_worse_map = np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
-        all_order_map= np.zeros((EnvParameters.WORLD_HIGH, EnvParameters.WORLD_WIDE))
+        all_first_map = np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
+        all_worse_map = np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
+        all_order_map= np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
         agents_order = [i for i in range(self.num_agents)]
         agents_order.sort(key=lambda x: (self.world.heuristic_map[self.rhcr.rl_agent_goals[x][self.goals_id[x]]][
                                           self.agent_poss[x][0] * self.world_wide + self.agent_poss[x][1]], -self.elapsed[x],
                                       -self.rhcr.tie_breaker[x])) # the former has higher priority
-        agent_first_map = np.zeros((1,CopParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
-        agent_worse_map = np.zeros((1,CopParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
+        agent_first_map = np.zeros((1,runParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
+        agent_worse_map = np.zeros((1,runParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
         for visible_ag, poss in enumerate(self.agent_poss):  # global poss
             node_index=self.node_index_dict[poss]
             _, _, _, _,_,_,_,_,top_left = self.obs_range[node_index]
@@ -222,7 +224,7 @@ class CO_MAPFEnv(gym.Env):
                 agent_worse_map[0,node_index, worse[0]-top_left[0], worse[1]-top_left[1]] = 1
 
         all_order_map/= self.num_agents
-        for node in range(CopParameters.N_NODE):
+        for node in range(runParameters.N_NODE):
             FOV_top, FOV_bottom, FOV_left, FOV_right, top_poss, bottom_poss, left_poss, right_poss,_ = self.obs_range[node]
             obs_map = np.ones((1, CopParameters.FOV, CopParameters.FOV))
             induct_eject_map = np.zeros((1, CopParameters.FOV, CopParameters.FOV))
