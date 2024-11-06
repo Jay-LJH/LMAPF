@@ -7,6 +7,7 @@ from collections import deque
 import os
 from world_property import State
 import itertools
+from util import *
 
 MAPdirDict = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1), 4: (-1, 0)} # 0 wait ,1 right, 2 down, 3 left, 4 up
 actionDict = {v: k for k, v in MAPdirDict.items()}
@@ -17,9 +18,16 @@ actions_combination_list = list(itertools.permutations(numbers, 3))
 
 class CO_MAPFEnv(gym.Env):
     """map MAPF problems to a standard RL environment"""    
-    def __init__(self,env_id,episode_len,path=None):
-        if path is None:
-            path = "maps/Maze_"+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"      
+    def __init__(self,env_id,episode_len,file_name=None):
+        if file_name is None:
+            self.path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
+            config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
+        else:
+            self.path = "maps/" + file_name + ".txt"
+            config = "maps/" + file_name + ".config"
+        if os.path.exists(config):
+                read_config(config)
+        self.world_high,self.world_wide,self.total_map=read_map(self.path)      
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
@@ -28,7 +36,6 @@ class CO_MAPFEnv(gym.Env):
         self.episode_len=episode_len
         self.project_path = os.getcwd() + "/h_maps"
         self.num_agents=runParameters.N_AGENT
-        self.world_high,self.world_wide,self.total_map=self.read_map(path)
         self.finished_task=0
         self.wait_map=np.zeros((self.world_high,self.world_wide))
         self.build_sorting_map()

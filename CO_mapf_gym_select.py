@@ -8,6 +8,7 @@ import os
 from world_property import State
 import itertools
 import random
+from util import *
 
 MAPdirDict = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1), 4: (-1, 0)} # 0 wait ,1 right, 2 down, 3 left, 4 up
 actionDict = {v: k for k, v in MAPdirDict.items()}
@@ -18,43 +19,31 @@ actions_combination_list = list(itertools.permutations(numbers, 3))
 
 class CO_MAPFEnv(gym.Env):
     """map MAPF problems to a standard RL environment"""
-    def __init__(self,env_id, selected_vertex,path=None):
-        if path is None:
-            path = "maps/Maze_"+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"      
+    def __init__(self,env_id, selected_vertex,episode_len ,file_name=None):
+        if file_name is None:
+            path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
+            config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
+        else:
+            path = "maps/" + file_name + ".txt"
+            config = "maps/" + file_name + ".config"
+        if os.path.exists(config):
+                read_config(config)
+        self.world_high,self.world_wide,self.total_map=read_map(path)  
+        self.episode_len=episode_len    
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
         self.travel_value = 0
         self.env_id=env_id
+        
         self.selected_vertex= selected_vertex
+        self.num_node=len(selected_vertex)
         self.project_path = os.getcwd() + "/h_maps"
         self.num_agents=runParameters.N_AGENT
-        self.world_high,self.world_wide,self.total_map=self.read_map(path)
         self.finished_task=0
         self.wait_map=np.zeros((self.world_high,self.world_wide))
         self.build_sorting_map()
         self.build_guide_map()
-    def read_map(self,file_path):
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-        dimensions = lines[0].strip().split()
-        rows = int(dimensions[0])
-        cols = int(dimensions[1])
-
-        map_data = []
-        for line in lines[1:rows+1]:
-            map_data.append(list(line.strip()))
-        for i in range(rows):
-            for j in range(cols):
-                if map_data[i][j] == '@':
-                    map_data[i][j] = self.obstacle_value
-                elif map_data[i][j] == 'e':
-                    map_data[i][j] = self.eject_value
-                elif map_data[i][j] == 'i':
-                    map_data[i][j] = self.induct_value
-                else:
-                    map_data[i][j] = self.travel_value
-        return rows, cols, np.array(map_data,dtype=np.int32)
     
     def build_sorting_map(self):
         self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
@@ -109,7 +98,7 @@ class CO_MAPFEnv(gym.Env):
         self.local_to_global=[]
         self.global_to_local={}
         for i in range(self.num_node):
-            global_i=self.node_index_dict[(self.selected_vertex[i,0],self.selected_vertex[i,1])]
+            global_i=self.node_index_dict[(self.selected_vertex[i][0],self.selected_vertex[i][1])]
             self.local_to_global.append(global_i)
             self.global_to_local[global_i]=i
 
@@ -127,18 +116,13 @@ class CO_MAPFEnv(gym.Env):
         self.goals_id= np.zeros(self.num_agents, dtype=np.int32)
         self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
         self.uti_deque = deque(maxlen=CopParameters.UTIL_T)
-        self.world=State(self.world_high,self.world_wide,self.node_poss)
-        map_location=self.project_path+"/"+ str(self.env_id)+str(self.world_high)+str(self.world_wide)+"py_h_map.npy"
-        try:
-            with open(map_location, 'rb') as f:
-                self.world.heuristic_map = np.load(f, allow_pickle=True).item()
-                self.world.all_priority= np.load(f, allow_pickle=True).item()
-                self.world.all_h_map = np.load(f, allow_pickle=True)
-        except FileNotFoundError:
-            heuristic_map=self.rhcr.get_heuri_map()
-            self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map,map_location) # convert and ssave
-        self.elapsed=np.zeros(self.num_agents)
+        self.world=State(self.world_high,self.world_wide,self.node_poss) 
+        heuristic_map=self.rhcr.get_heuri_map()
+        self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map) #convert and save
+        self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
+        self.pibt_time = 0
         return
+    
 
     def local_reset(self):
         succ=self.rhcr.update_system(self.true_path)
@@ -166,7 +150,9 @@ class CO_MAPFEnv(gym.Env):
                 action_guidance[i, act_order[2]] = CopParameters.TOP_NUM - 2
      
         # solve conflict by PIBT
+        before_pibt = datetime.datetime.now()
         coll_times = self.rhcr.run_pibt(action_guidance)
+        self.pibt_time += (datetime.datetime.now() - before_pibt).total_seconds()
         self.agent_poss=self.rhcr.rl_path
         uti_map = np.zeros((5, self.world_high, self.world_wide))
         # update final status
@@ -191,7 +177,7 @@ class CO_MAPFEnv(gym.Env):
         self.joint_move(map_action)
         actor_obs,actor_vec = self.observe_for_map()
 
-        if self.time_step >= CopParameters.EPISODE_LEN:
+        if self.time_step >= self.episode_len:
             done = True
         else:
             done = False

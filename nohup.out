@@ -1,92 +1,143 @@
 Directory content has not changed. No need to rebuild.
-2024-10-29 22:28:19,166	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
-wandb: Currently logged in as: liujay (liujay-National University of Singapore Students' Union). Use `wandb login --relogin` to force relogin
-wandb: wandb version 0.18.5 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.13.4
-wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241029_222824-ksxq5rn3
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run peachy-armadillo-20
-wandb: ⭐️ View project at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF
-wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/ksxq5rn3
-wandb: ERROR Error while calling W&B API: context deadline exceeded (<Response [500]>)
-*** SIGTERM received at time=1730263756 on cpu 17 ***
-PC: @     0x75a28d091117  (unknown)  (unknown)
-    @     0x75a28d042520  (unknown)  (unknown)
-    @ ... and at least 1 more frames
-[2024-10-30 11:49:16,833 E 3806922 3806922] logging.cc:440: *** SIGTERM received at time=1730263756 on cpu 17 ***
-[2024-10-30 11:49:16,833 E 3806922 3806922] logging.cc:440: PC: @     0x75a28d091117  (unknown)  (unknown)
-[2024-10-30 11:49:16,833 E 3806922 3806922] logging.cc:440:     @     0x75a28d042520  (unknown)  (unknown)
-[2024-10-30 11:49:16,833 E 3806922 3806922] logging.cc:440:     @ ... and at least 1 more frames
-wandb: Waiting for W&B process to finish... (success).
-wandb: - 0.001 MB of 0.017 MB uploaded (0.000 MB deduped)./run.sh: line 29: 3806922 Aborted                 (core dumped) python driver.py
-Exception in thread MsgRouterThr:
-Traceback (most recent call last):
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
-    self.run()
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/threading.py", line 982, in run
-    self._target(*self._args, **self._kwargs)
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/wandb/sdk/interface/router.py", line 70, in message_loop
-    msg = self._read_message()
-          ^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/wandb/sdk/interface/router_queue.py", line 36, in _read_message
-    msg = self._response_queue.get(timeout=1)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/multiprocessing/queues.py", line 117, in get
-    res = self._recv_bytes()
-          ^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/multiprocessing/connection.py", line 212, in recv_bytes
-    self._check_closed()
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/multiprocessing/connection.py", line 137, in _check_closed
-    raise OSError("handle is closed")
-OSError: handle is closed
-Directory content has not changed. No need to rebuild.
-2024-10-30 13:34:52,444	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
-Usage stats collection is disabled.
-Welcome to LMAPF!
+path:maps/Proportion_Maze_26_26_2.txt
+model_path:26*26_2
+select:selector
+probability:1.0
+[2024-11-05 17:04:55.968593] begin eval rl select Proportion_Maze_26_26_2 using selector
+[2024-11-05 17:04:55.969482] finish selected_vertex
+[2024-11-05 17:06:12.825302] evaluation times:0
+throughput:1.5916015625 rl time:31.597336000000045 pibt time: 0.5082110000000076
+[2024-11-05 17:07:24.310994] evaluation times:1
+throughput:0.6505859375 rl time:28.895708999999982 pibt time: 0.4785509999999975
+[2024-11-05 17:08:35.956118] evaluation times:2
+throughput:0.6685546875 rl time:28.6617770000001 pibt time: 0.47575199999999007
+[2024-11-05 17:09:47.664687] evaluation times:3
+throughput:0.8125 rl time:28.493604000000083 pibt time: 0.48803700000000483
+[2024-11-05 17:10:59.829594] evaluation times:4
+throughput:0.7275390625 rl time:28.459397999999943 pibt time: 0.4751989999999974
+mean throughput:0.8901562500000001, std throughput:0.3552468314838246
 
-[33m(raylet)[0m The node with node id: 6fd9e2aed26f9c0e3d4c917625d6a796512855e4fe76b66be8871d3e and address: 172.16.185.204 and node name: 172.16.185.204 has been marked dead because the detector has missed too many heartbeats from it. This can happen when a 	(1) raylet crashes unexpectedly (OOM, etc.) 
-	(2) raylet has lagging heartbeats due to slow network or busy workload.
-Saving Final Model !
+path:maps/Proportion_Maze_26_26_2.txt
+model_path:26*26_2
+select:random_selector
+probability:0.5
+[2024-11-05 17:11:01.205867] begin eval rl select Proportion_Maze_26_26_2 using random_selector
+[2024-11-05 17:11:01.206787] finish selected_vertex
+[2024-11-05 17:12:02.814940] evaluation times:0
+throughput:0.540234375 rl time:17.116082000000052 pibt time: 0.5012590000000117
+[2024-11-05 17:12:54.852837] evaluation times:1
+throughput:0.4763671875 rl time:16.380231000000023 pibt time: 0.49016700000000324
+[2024-11-05 17:13:51.396320] evaluation times:2
+throughput:0.334375 rl time:16.461687000000005 pibt time: 0.4965700000000053
+[2024-11-05 17:14:58.146921] evaluation times:3
+throughput:0.4087890625 rl time:17.508732000000002 pibt time: 0.5307660000000114
+[2024-11-05 17:16:04.907135] evaluation times:4
+throughput:0.5271484375 rl time:17.584714999999925 pibt time: 0.5372910000000088
+mean throughput:0.4573828125, std throughput:0.07692113468946012
 
-Traceback (most recent call last):
-  File "/home/marmot/ljh/LMAPF/driver.py", line 182, in <module>
-    main(sys.argv)
-  File "/home/marmot/ljh/LMAPF/driver.py", line 85, in main
-    job_results = ray.get(done_id)
-                  ^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 21, in auto_init_wrapper
-    return fn(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/ray/_private/worker.py", line 2745, in get
-    values, debugger_breakpoint = worker.get_objects(object_refs, timeout=timeout)
-                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/ray/_private/worker.py", line 903, in get_objects
-    raise value
-ray.exceptions.ActorDiedError: The actor died unexpectedly before finishing this task.
-	class_name: RLRunner
-	actor_id: 738deeb51a0c8a0b0800c65c01000000
-	pid: 1047531
-	namespace: 133de087-d688-4a8e-ab8d-81d0487ab85d
-	ip: 172.16.185.204
-The actor died because its node has died. Node Id: 6fd9e2aed26f9c0e3d4c917625d6a796512855e4fe76b66be8871d3e
-	the actor's node was terminated unexpectedly: dashboard_agent/424238335 failed and raylet fate-shares with it.
-[33m(raylet)[0m [2024-10-30 13:35:43,653 E 1047419 1047496] (raylet) agent_manager.cc:83: The raylet exited immediately because one Ray agent failed, agent_name = dashboard_agent/424238335.
-[33m(raylet)[0m The raylet fate shares with the agent. This can happen because
-[33m(raylet)[0m - The version of `grpcio` doesn't follow Ray's requirement. Agent can segfault with the incorrect `grpcio` version. Check the grpcio version `pip freeze | grep grpcio`.
-[33m(raylet)[0m - The agent failed to start because of unexpected error or port conflict. Read the log `cat /tmp/ray/session_latest/logs/{dashboard_agent|runtime_env_agent}.log`. You can find the log file structure here https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure.
-[33m(raylet)[0m - The agent is killed by the OS (e.g., out of memory).
-Directory content has not changed. No need to rebuild.
-2024-10-30 13:36:29,995	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
-wandb: Currently logged in as: liujay (liujay-National University of Singapore Students' Union). Use `wandb login --relogin` to force relogin
-wandb: wandb version 0.18.5 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.13.4
-wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241030_133635-s2xbqbbn
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run hollow-dance-21
-wandb: ⭐️ View project at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF
-wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/s2xbqbbn
+path:maps/Proportion_Maze_26_26_2.txt
+model_path:26*26_2
+select:pibt_selector
+probability:0.5
+[2024-11-05 17:16:06.300428] begin eval rl select Proportion_Maze_26_26_2 using pibt_selector
+pibt eval time:  0
+[2024-11-05 17:16:07.579741] time step:0
+[2024-11-05 17:16:11.663304] time step:1000
+[2024-11-05 17:16:31.719450] time step:2000
+[2024-11-05 17:17:06.614212] time step:3000
+[2024-11-05 17:17:57.529520] time step:4000
+[2024-11-05 17:19:04.578360] time step:5000
+pibt eval time:  1
+[2024-11-05 17:19:15.251130] time step:0
+[2024-11-05 17:19:19.296686] time step:1000
+[2024-11-05 17:19:37.870187] time step:2000
+[2024-11-05 17:20:11.653256] time step:3000
+[2024-11-05 17:21:01.824920] time step:4000
+[2024-11-05 17:22:08.896811] time step:5000
+pibt eval time:  2
+[2024-11-05 17:22:18.872972] time step:0
+[2024-11-05 17:22:22.716909] time step:1000
+[2024-11-05 17:22:40.662016] time step:2000
+[2024-11-05 17:23:13.192530] time step:3000
+[2024-11-05 17:24:00.384747] time step:4000
+[2024-11-05 17:25:04.442245] time step:5000
+pibt eval time:  3
+[2024-11-05 17:25:14.325145] time step:0
+[2024-11-05 17:25:18.427514] time step:1000
+[2024-11-05 17:25:40.864975] time step:2000
+[2024-11-05 17:26:18.378904] time step:3000
+[2024-11-05 17:27:10.936111] time step:4000
+[2024-11-05 17:28:19.082551] time step:5000
+pibt eval time:  4
+[2024-11-05 17:28:29.765834] time step:0
+[2024-11-05 17:28:33.474535] time step:1000
+[2024-11-05 17:28:51.913305] time step:2000
+[2024-11-05 17:29:25.612364] time step:3000
+[2024-11-05 17:30:14.725991] time step:4000
+[2024-11-05 17:31:20.751783] time step:5000
+pibt eval time:  5
+[2024-11-05 17:31:30.823067] time step:0
+[2024-11-05 17:31:34.469370] time step:1000
+[2024-11-05 17:31:53.293695] time step:2000
+[2024-11-05 17:32:26.381592] time step:3000
+[2024-11-05 17:33:14.159758] time step:4000
+[2024-11-05 17:34:20.724935] time step:5000
+pibt eval time:  6
+[2024-11-05 17:34:30.877323] time step:0
+[2024-11-05 17:34:34.768572] time step:1000
+[2024-11-05 17:34:54.746385] time step:2000
+[2024-11-05 17:35:31.080584] time step:3000
+[2024-11-05 17:36:22.753937] time step:4000
+[2024-11-05 17:37:30.879510] time step:5000
+pibt eval time:  7
+[2024-11-05 17:37:41.264331] time step:0
+[2024-11-05 17:37:45.141724] time step:1000
+[2024-11-05 17:38:04.702421] time step:2000
+[2024-11-05 17:38:39.005185] time step:3000
+[2024-11-05 17:39:29.021269] time step:4000
+[2024-11-05 17:40:36.195395] time step:5000
+pibt eval time:  8
+[2024-11-05 17:40:46.427094] time step:0
+[2024-11-05 17:40:50.332195] time step:1000
+[2024-11-05 17:41:09.331375] time step:2000
+[2024-11-05 17:41:43.297919] time step:3000
+[2024-11-05 17:42:33.719213] time step:4000
+[2024-11-05 17:43:41.269919] time step:5000
+pibt eval time:  9
+[2024-11-05 17:43:51.268290] time step:0
+[2024-11-05 17:43:55.447495] time step:1000
+[2024-11-05 17:44:17.530279] time step:2000
+[2024-11-05 17:44:54.387126] time step:3000
+[2024-11-05 17:45:47.460229] time step:4000
+[2024-11-05 17:46:58.296027] time step:5000
+[2024-11-05 17:47:07.426747] finish selected_vertex
+[2024-11-05 17:48:01.317300] evaluation times:0
+throughput:0.6916015625 rl time:18.06185399999993 pibt time: 0.5089600000000001
+[2024-11-05 17:48:56.713233] evaluation times:1
+throughput:0.3759765625 rl time:17.997756000000017 pibt time: 0.524008000000005
+[2024-11-05 17:49:54.625310] evaluation times:2
+throughput:0.45078125 rl time:17.99667199999996 pibt time: 0.5303420000000093
+[2024-11-05 17:50:51.439607] evaluation times:3
+throughput:0.4001953125 rl time:17.99361499999997 pibt time: 0.5227540000000033
+[2024-11-05 17:51:48.132585] evaluation times:4
+throughput:0.18125 rl time:18.016145000000005 pibt time: 0.529377000000009
+mean throughput:0.4199609375000001, std throughput:0.1637356025248623
+
+path:maps/Proportion_Maze_26_26_2.txt
+model_path:26*26_2
+select:BC_selector
+probability:0.5
+[2024-11-05 17:51:49.444818] begin eval rl select Proportion_Maze_26_26_2 using BC_selector
+[2024-11-05 17:51:49.631252] finish selected_vertex
+[2024-11-05 17:52:45.665044] evaluation times:0
+throughput:0.1876953125 rl time:18.533471999999964 pibt time: 0.5272900000000068
+[2024-11-05 17:53:39.100898] evaluation times:1
+throughput:0.4384765625 rl time:18.002543999999975 pibt time: 0.5299670000000078
+[2024-11-05 17:54:34.444619] evaluation times:2
+throughput:0.6255859375 rl time:18.022442000000048 pibt time: 0.5295060000000069
+[2024-11-05 17:55:29.354064] evaluation times:3
+throughput:1.1982421875 rl time:18.003937999999977 pibt time: 0.5253970000000072
+[2024-11-05 17:56:24.506448] evaluation times:4
+throughput:0.239453125 rl time:18.050065999999944 pibt time: 0.5343150000000123
+mean throughput:0.537890625, std throughput:0.36478473324870403
+

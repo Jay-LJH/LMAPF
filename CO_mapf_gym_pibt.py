@@ -6,6 +6,7 @@ import os
 from world_property import State
 import itertools
 from util import *
+import datetime
 
 MAPdirDict = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1), 4: (-1, 0)}  #  0 wait ,1 right, 2 down, 3 left, 4 up
 actionDict = {v: k for k, v in MAPdirDict.items()}
@@ -16,16 +17,14 @@ actions_combination_list = list(itertools.permutations(numbers, 3))
 class CO_MAPFEnv(gym.Env):
     def __init__(self,env_id,episode_len,file_name=None):
         if file_name is None:
-            path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
-            config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
+            self.path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
+            self.config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
         else:
-            path = "maps/" + file_name + ".txt"
-            config = "maps/" + file_name + ".config"
-        if os.path.exists(config):
-                read_config(config)
-        print("map path: ", path)
-        print("config path: ", config)
-        self.world_high,self.world_wide,self.total_map=read_map(path) 
+            self.path = "maps/" + file_name + ".txt"
+            self.config = "maps/" + file_name + ".config"
+        if os.path.exists(self.config):
+                read_config(self.config)
+        self.world_high,self.world_wide,self.total_map=read_map(self.path) 
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
@@ -140,6 +139,8 @@ class CO_MAPFEnv(gym.Env):
         return
 
     def joint_step(self):
+        if(self.time_step%1000 == 0):
+            print("[{}] time step:{}".format(datetime.datetime.now(),self.time_step))
         self.time_step+=1
         self.local_time_step+=1
         self.joint_move()
@@ -152,7 +153,6 @@ class CO_MAPFEnv(gym.Env):
         else:
             local_done=False
         return done, local_done
-
 
     def get_action(self, direction):
         return actionDict[direction]

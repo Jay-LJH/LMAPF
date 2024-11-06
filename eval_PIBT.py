@@ -2,6 +2,7 @@ import numpy as np
 from CO_mapf_gym_pibt import CO_MAPFEnv
 from util import set_global_seeds
 import sys
+import datetime
 RUN_STEP=5120
 EVAL_TIMES=10
 # recording path and collide times
@@ -29,13 +30,13 @@ if __name__ == "__main__":
     else:
         env = Runner(0)
     throughputs=[]
+    print('start evaluation {} at:{}'.format(env.env_map.path,datetime.datetime.now()))
     for eval_time in range(EVAL_TIMES):  # 0 wait ,1 right, 2 down, 3 left, 4 up
         throughput, paths, collide_times = env.map_run(eval_time*123)
-        print('evaluation times:{}'.format(eval_time))
+        print('[{}] evaluation times:{}'.format(datetime.datetime.now(),eval_time))
         print('throughput:{}'.format(throughput))
         throughputs.append(throughput)
 
     throughput_std=np.std(throughputs)
     throughput_mean=np.mean(throughputs)
-    print("mean throughput:{}, std throughput:{}".format(throughput_mean,throughput_std))
-    print("test")
+    print("mean throughput:{}, std throughput:{}\n".format(throughput_mean,throughput_std))

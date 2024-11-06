@@ -252,9 +252,42 @@ class Warehouse(map):
         self.eject_map[self.matrix == -2] = 1
         self.induct_map[self.matrix == -3] = 1
         self.eject_induct_map = self.eject_map + self.induct_map
+
+# random map created by cellular automata
+# 0: path, -1: wall
+# iteration = 5
+class Cellular_Automata(map):
+    def __init__(self, width=runParameters.WORLD_WIDE, height=runParameters.WORLD_HIGH
+                 ,obstacle_rate=0.5,seed=42,path=None):
+        self.obstacle_rate = obstacle_rate
+        super().__init__(width, height,seed,path=path) 
         
+    def generate_map(self):
+        map = np.random.choice([0, -1], size=(self.height, self.width), p=[1-self.obstacle_rate, self.obstacle_rate])      
+        for _ in range(5):
+            new_map = np.copy(map)
+            for y in range(self.height):
+                for x in range(self.width):
+                    neighbors = map[y-1:y+2, x-1:x+2].sum() - map[y, x]
+                    if map[y, x] == -1:  
+                        if neighbors > -4:
+                            new_map[y, x] = 0  
+                    else:  
+                        if neighbors < -3:
+                            new_map[y, x] = -1  
+            map = new_map
+        self.matrix = map
+        self.nodes = []
+        self.obstacles = []
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.matrix[i,j] == 0:
+                    self.nodes.append((i,j))
+                elif self.matrix[i,j] == -1:
+                    self.obstacles.append((i,j))
+
 if __name__ == "__main__":
-    maze = Maze(25, 25,seed=42, obstacle_rate=0.5,pad=True)
+    maze = Proportion_Maze(26, 26,proportion=2,seed=42, pad=True,obstacle_rate=0.3)
     maze.print_map()
     print(maze.matrix.shape)
     maze.serialize()

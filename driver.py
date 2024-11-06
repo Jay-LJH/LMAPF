@@ -49,6 +49,8 @@ def main(sys_argv):
         config = "maps/" + file_name + ".config"
     if os.path.exists(config):
         read_config(config)
+    _, _, map = read_map(path)
+    print("running on map: \n", map)
     global_device = torch.device('cuda') if SetupParameters.USE_GPU_GLOBAL else torch.device('cpu')
     local_device = torch.device('cuda') if SetupParameters.USE_GPU_LOCAL else torch.device('cpu')
     global_map_model = MapModel(0, global_device, True)
