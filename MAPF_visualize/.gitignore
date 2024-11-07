@@ -1,0 +1,8 @@
+__pycache__
+.vscode
+.cache
+gym_maze.egg-info
+build
+dist
+logs/
+paths/warehouse_nca_promo

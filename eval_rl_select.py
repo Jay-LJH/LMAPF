@@ -9,8 +9,8 @@ from node_selector import *
 import sys
 from CO_mapf_gym_select import CO_MAPFEnv
 import datetime
-RUN_STEP=5120
-EVAL_TIMES=5
+RUN_STEP=2048
+EVAL_TIMES=1
 # recording path and collide times
 
 class Runner(object):
@@ -44,16 +44,19 @@ class Runner(object):
                     self.env_map.local_reset()
             throughput=self.env_map.all_finished_task/self.env_map.episode_len
         return throughput,rl_time
-wq  
+    
 # args 1: path 2: method 3:probability
-if __name__ == "__main__":
-    origin_path = "Proportion_Maze_26_26_1"
+if __name__ == "__main__":   
     if len(sys.argv) > 1 :
         origin_path = sys.argv[1]
+    else:
+        origin_path = "Proportion_Maze_26_26_3"
     path = "maps/"+origin_path+".txt"
     print("path:{}".format(path))
     if len(sys.argv) > 2:
         model_path = sys.argv[2]
+    else:
+        model_path = "26*26_3"
     print("model_path:{}".format(model_path))
     dict = {"random":random_selector,"pibt":pibt_selector,"BC":BC_selector,"all":selector}
     if len(sys.argv) > 3:
@@ -67,6 +70,7 @@ if __name__ == "__main__":
         probability = 1.0
     print("probability:{}".format(probability))
     print("[{}] begin eval rl select {} using {}".format(datetime.datetime.now(),origin_path,select.__name__))
+    
     _,_,map = read_map(path)
     selected_vertex = select(map,probability,file_name=origin_path).select()
     print("[{}] finish selected_vertex".format(datetime.datetime.now()))
