@@ -9,8 +9,9 @@ from node_selector import *
 import sys
 from CO_mapf_gym_select import CO_MAPFEnv
 import datetime
-RUN_STEP=2048
-EVAL_TIMES=1
+RUN_STEP = 5120
+RECORD = True
+EVAL_TIMES=1 if RECORD else 10
 # recording path and collide times
 
 class Runner(object):
@@ -29,6 +30,7 @@ class Runner(object):
     def map_run(self,seed):
         with torch.no_grad():
             self.env_map.global_reset(True,seed)
+            recordings = [[] for _ in range(self.env_map.num_agents)]
             map_hidden_state = (
                 torch.zeros((self.K, CopParameters.NET_SIZE)).to(self.local_device),
                 torch.zeros((self.K, CopParameters.NET_SIZE)).to(self.local_device))
@@ -40,10 +42,12 @@ class Runner(object):
                 map_action, _, _, map_hidden_state = self.local_map_model.step(map_obs, map_vector,map_hidden_state,self.K)
                 rl_time += (datetime.datetime.now()-before).total_seconds()
                 map_done, rl_local_restart, map_obs, map_vector = self.env_map.joint_step(map_action)
+                for i in range(len(self.env_map.agent_poss)):
+                    recordings[i].append(self.env_map.agent_poss[i])
                 if rl_local_restart and not map_done:
                     self.env_map.local_reset()
-            throughput=self.env_map.all_finished_task/self.env_map.episode_len
-        return throughput,rl_time
+            throughput=self.env_map.all_finished_task/self.env_map.episode_len        
+        return throughput,rl_time,recordings
     
 # args 1: path 2: method 3:probability
 if __name__ == "__main__":   
@@ -56,7 +60,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         model_path = sys.argv[2]
     else:
-        model_path = "26*26_3"
+        model_path = "26_26_3"
     print("model_path:{}".format(model_path))
     dict = {"random":random_selector,"pibt":pibt_selector,"BC":BC_selector,"all":selector}
     if len(sys.argv) > 3:
@@ -69,6 +73,12 @@ if __name__ == "__main__":
     else:
         probability = 1.0
     print("probability:{}".format(probability))
+    if RECORD:
+        if len(sys.argv) > 5:
+            record_path = "./recordings"+sys.argv[5]+".txt"
+        else:
+            record_path = "./recordings/"+origin_path+"_"+select.__name__+"_"+str(probability)+".txt"
+        print("record_path:{}".format(record_path))
     print("[{}] begin eval rl select {} using {}".format(datetime.datetime.now(),origin_path,select.__name__))
     
     _,_,map = read_map(path)
@@ -77,11 +87,19 @@ if __name__ == "__main__":
     env = Runner(0,selected_vertex,model_path,origin_path)
     throughputs=[]
     for eval_time in range(EVAL_TIMES):  # 0 wait ,1 right, 2 down, 3 left, 4 up
-        throughput,rl_time = env.map_run(eval_time*123)
+        throughput,rl_time,recordings = env.map_run(eval_time*123)
         print('[{}] evaluation times:{}'.format(datetime.datetime.now(),eval_time))
         print('throughput:{} rl time:{} pibt time: {}'.format(throughput,rl_time,env.env_map.pibt_time))
         throughputs.append(throughput)
-
+    if RECORD:
+        with open(record_path,"w") as f:
+            for i in range(len(recordings)):
+                recording = recordings[i]
+                f.write("Agent "+str(i)+": ")
+                for pos in recording:
+                    f.write("("+str(pos[0])+","+str(pos[1])+")->")
+                f.write("\n")
+            
     throughput_std=np.std(throughputs)
     throughput_mean=np.mean(throughputs)
     print("mean throughput:{}, std throughput:{}".format(throughput_mean,throughput_std))

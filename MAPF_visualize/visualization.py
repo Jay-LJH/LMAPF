@@ -8,7 +8,7 @@ from gym_maze.utils import create_movie
 def main(
     map_file,
     path_file,
-    path_format="warehouse", # one of ["default", "warehouse"]
+    path_format="default", # one of ["default", "warehouse"]
     domain="kiva", # one of ["kiva", "default"]
 ):
     print("Show maze")

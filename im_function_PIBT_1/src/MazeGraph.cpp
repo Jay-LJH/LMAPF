@@ -83,7 +83,7 @@ void MazeGraph::preprocessing(const std::string &project_path, int env_id)
     }
 }
 
-// find a free position in the map
+// return a random travel in the map
 int MazeGraph::get_random_travel()
 {
     if(travels.empty())
