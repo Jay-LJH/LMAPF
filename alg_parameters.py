@@ -57,6 +57,7 @@ class TrainingParameters:
     N_MAX_STEPS = 4e7  # maximum number of time steps used in training
     opti_eps=1e-8
     weight_decay=0
+    MIN_COLL = 2e4
 
 class SetupParameters:
     SEED = 42
@@ -67,7 +68,7 @@ class SetupParameters:
 
 class RecordingParameters:
     RETRAIN = False
-    WANDB = True
+    WANDB = False
     ENTITY = 'JayLiu'  #记得换成自己的wandb account
     TIME = datetime.datetime.now().strftime('%d-%m-%y%H%M')
     EXPERIMENT_PROJECT = 'LMAPF'

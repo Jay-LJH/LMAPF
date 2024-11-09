@@ -3,9 +3,9 @@ from CO_mapf_gym_pibt import CO_MAPFEnv
 from util import set_global_seeds
 import sys
 import datetime
-RUN_STEP=10240
-RECORD = True
-EVAL_TIMES=1 if RECORD else 10
+RUN_STEP=1000
+RECORD = False
+EVAL_TIMES=1 if RECORD else 5
 # recording path and collide times
 
 class Runner(object):

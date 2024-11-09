@@ -9,9 +9,9 @@ from node_selector import *
 import sys
 from CO_mapf_gym_select import CO_MAPFEnv
 import datetime
-RUN_STEP = 5120
-RECORD = True
-EVAL_TIMES=1 if RECORD else 10
+RUN_STEP = 100
+RECORD = False
+EVAL_TIMES=1 if RECORD else 5
 # recording path and collide times
 
 class Runner(object):
@@ -22,7 +22,7 @@ class Runner(object):
         self.local_device = torch.device('cuda') if SetupParameters.USE_GPU_LOCAL else torch.device('cpu')
         self.local_map_model = MapModel(env_id, self.local_device)
         self.K = self.env_map.num_node
-        restore_path = 'models/LMAPF/'+ model_path+'/final'
+        restore_path = 'models/LMAPF/'+ model_path+"/2308608"
         map_net_path_checkpoint = restore_path + "/map_net_checkpoint.pkl"
         map_net_dict = torch.load(map_net_path_checkpoint)
         self.local_map_model.network.load_state_dict(map_net_dict['model'])

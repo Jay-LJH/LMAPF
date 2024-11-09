@@ -7,3 +7,4 @@ h_maps/
 */build/
 *.ipynb
 .dir_hash
+logs/

@@ -3,9 +3,9 @@
 std::unordered_map<int, int> myMap = {
     {0, 0},
     {1, 1}, //
-    {23, 2},
+    {26, 2},
     {-1, 3},
-    {-23, 4},
+    {-26, 4},
 }; // 0 stay, 1 right, 2 down, 3 left, 4 up
 
 PIBT_MAPD::PIBT_MAPD(const BasicGraph &G, int seed, int map_size)
@@ -14,6 +14,13 @@ PIBT_MAPD::PIBT_MAPD(const BasicGraph &G, int seed, int map_size)
       occupied_next(Agents(map_size, nullptr))
 {
     this->MT = new std::mt19937(seed);
+    myMap = {
+        {0, 0},
+        {1, 1}, //
+        {this->G.cols, 2},
+        {-1, 3},
+        {-this->G.cols, 4},
+    }; // 0 stay, 1 right, 2 down, 3 left, 4 up
 }
 PIBT_MAPD::~PIBT_MAPD()
 {
@@ -160,11 +167,10 @@ bool PIBT_MAPD::funcPIBT(Agent *ai, Agent *aj)
     auto node_compare = [&](const State &v, const State &u)
     {
         // tie breaker
-        int v_action = myMap[v.location - ai->v_now.location];
+        int v_action = myMap[v.location - ai->v_now.location]; 
         int u_action = myMap[u.location - ai->v_now.location];
         if (action_guide[curr_ag_id][v_action] != action_guide[curr_ag_id][u_action])
             return action_guide[curr_ag_id][v_action] > action_guide[curr_ag_id][u_action];
-        // cout<<"v action "<<v_action<<"v value "<<action_guide[curr_ag_id][v_action]<<"u action "<<u_action<<"u value "<<action_guide[curr_ag_id][u_action]<<endl;
         int d_v = G.heuristics.at(ai->g)[v.location];
         int d_u = G.heuristics.at(ai->g)[u.location];
         if (d_v != d_u)
@@ -226,7 +232,7 @@ bool PIBT_MAPD::funcPIBT_without_guide(Agent* ai, Agent* aj)
   // compare two nodes
     auto node_compare = [&](const State& v, const State& u) {
         // tie breaker
-        int d_v = G.heuristics.at(ai->g)[v.location];
+        int d_v = G.heuristics.at(ai->g)[v.location];   
         int d_u = G.heuristics.at(ai->g)[u.location];
         if (d_v != d_u) return d_v < d_u;  // true means v is better than u
         if (occupied_now[v.location] != nullptr && occupied_now[u.location] == nullptr)

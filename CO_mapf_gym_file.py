@@ -114,6 +114,7 @@ class CO_MAPFEnv(gym.Env):
         heuristic_map=self.rhcr.get_heuri_map()
         self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map) #convert and save
         self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
+        self.total_collisions=0
         return
 
     def local_reset(self):  # update goals
@@ -132,7 +133,6 @@ class CO_MAPFEnv(gym.Env):
         team_agent_on_grid = np.zeros(runParameters.N_NODE)
         rewards = np.zeros((1, runParameters.N_NODE), dtype=np.float32)
         team_rewards = np.zeros((1, runParameters.N_NODE), dtype=np.float32)
-
         action_guidance=np.zeros((self.num_agents,CopParameters.MAP_ACTION),dtype=np.int32) # the bigger the number the high the priority
         # transfer action
         for i in range(self.num_agents):
@@ -140,11 +140,12 @@ class CO_MAPFEnv(gym.Env):
             ay = self.agent_poss[i][1]
             node_index = self.node_index_dict[(ax,ay)]
             act_order=actions_combination_list[int(map_action[node_index])]
-            action_guidance[i,act_order[0]]=CopParameters.TOP_NUM
+            action_guidance[i,act_order[0]] = CopParameters.TOP_NUM
             action_guidance[i, act_order[1]] = CopParameters.TOP_NUM-1
             action_guidance[i, act_order[2]] = CopParameters.TOP_NUM - 2
         # solve conflict by PIBT
         coll_times=self.rhcr.run_pibt(action_guidance)
+        self.total_collisions+=sum(coll_times)
         self.agent_poss=self.rhcr.rl_path
         uti_map = np.zeros((5, self.world_high, self.world_wide))
         # update final status
@@ -181,12 +182,47 @@ class CO_MAPFEnv(gym.Env):
         team_rewards=np.divide(team_rewards, team_agent_on_grid, out=np.zeros_like(team_rewards, dtype=np.float32), where=team_agent_on_grid!=0)
         rewards=rewards+CopParameters.TEAM_REWARD*team_rewards
         return rewards
+    
+    # run pibt without action guidance
+    def joint_move_without_action(self):
+        past_position = copy.copy(self.agent_poss)
+        action = np.zeros(self.num_agents, dtype=np.int32)
+        self.agent_state = np.zeros((self.world_high, self.world_wide))
+        coll_times=self.rhcr.run_pibt() # run PIBT without the guidance form RL
+        coll_map=np.zeros((self.world_high,self.world_wide))
+        self.agent_poss=self.rhcr.rl_path
+        self.total_collisions+=sum(coll_times)
+        uti_map = np.zeros((5, self.world_high, self.world_wide))
+        # update final status
+        for i in range(self.num_agents):
+            self.elapsed[i] +=1
+            self.agent_state[self.agent_poss[i]] += 1
+            self.true_path[i].append(self.agent_poss[i])
+            coll_map[self.agent_poss[i]] += coll_times[i]
+            action[i]=self.get_action((self.agent_poss[i][0]-past_position[i][0],self.agent_poss[i][1]-past_position[i][1]))
+            self.agent_state[self.agent_poss[i]] += 1
+            uti_map[int(action[i]), self.agent_poss[i][0], self.agent_poss[i][1]] += 1
+            if self.agent_poss[i] == self.rhcr.rl_agent_goals[i][self.goals_id[i]]:
+                self.goals_id[i]+=1
+                self.all_finished_task+=1
+                self.elapsed[i]=0
+            if self.agent_poss[i] == self.rhcr.rl_agent_goals[i][self.goals_id[i]]:
+                self.finished_task+=1
+                self.goals_id[i]+=1
+                self.all_finished_task+=1
+                self.elapsed[i]=0
+        self.uti_deque.append(uti_map)
+        return  
 
-    def joint_step(self,map_action):
+    def joint_step(self,map_action=None):
         """execute joint action and obtain reward"""
         self.time_step+=1
         self.local_time_step+=1
-        rewards=self.joint_move(map_action)
+        if map_action is None:
+            self.joint_move_without_action()
+            rewards=np.zeros((0, runParameters.N_NODE), dtype=np.float32)
+        else:
+            rewards=self.joint_move(map_action)
         actor_obs,actor_vec = self.observe_for_map()
         if self.time_step >= CopParameters.EPISODE_LEN:
             done = True
@@ -246,7 +282,7 @@ class CO_MAPFEnv(gym.Env):
             obs_map[:, FOV_top:FOV_bottom, FOV_left:FOV_right] = self.obstacle_map[top_poss:bottom_poss, left_poss:right_poss]
             induct_eject_map[:,FOV_top:FOV_bottom, FOV_left:FOV_right] = self.eject_induct_map[top_poss:bottom_poss,left_poss:right_poss]
             all_h_map[:,FOV_top:FOV_bottom, FOV_left:FOV_right] = self.world.all_h_map[:,top_poss:bottom_poss, left_poss:right_poss]
-            util_map[:, FOV_top:FOV_bottom, FOV_left:FOV_right] = sum_util_map[:, top_poss:bottom_poss,
+            util_map[:, FOV_top:FOV_bottom, FOV_left:FOV_right] = sum_util_map[:, top_poss:bottom_poss,\
                                                                        left_poss:right_poss]
             agent_map[:,  FOV_top:FOV_bottom, FOV_left:FOV_right] = self.agent_state[top_poss:bottom_poss, left_poss:right_poss]
             first_map[:, FOV_top:FOV_bottom, FOV_left:FOV_right] = all_first_map[top_poss:bottom_poss,left_poss:right_poss]

@@ -17,7 +17,7 @@ class Runner(object):
         self.env_map= CO_MAPFEnv(env_id,RUN_STEP,path_name)
         self.local_device = torch.device('cuda') if SetupParameters.USE_GPU_LOCAL else torch.device('cpu')
         self.local_map_model = MapModel(env_id, self.local_device)
-        restore_path = 'models/LMAPF/Maze31-10-241316/301568'
+        restore_path = 'models/LMAPF/26_26_3/final'
         map_net_path_checkpoint = restore_path + "/map_net_checkpoint.pkl"
         map_net_dict = torch.load(map_net_path_checkpoint)
         self.local_map_model.network.load_state_dict(map_net_dict['model'])
@@ -56,3 +56,4 @@ if __name__ == "__main__":
     throughput_std=np.std(throughputs)
     throughput_mean=np.mean(throughputs)
     print("mean throughput:{}, std throughput:{}".format(throughput_mean,throughput_std))
+    print()

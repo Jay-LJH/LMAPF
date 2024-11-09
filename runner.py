@@ -4,7 +4,7 @@ import torch
 
 from alg_parameters import *
 from CO_mapf_gym_file import CO_MAPFEnv
-from util import set_global_seeds
+from util import *
 from map_model import MapModel
 
 class Runner(object):
@@ -28,7 +28,7 @@ class Runner(object):
         num_episode=0
         one_episode_perf= None
         mb_obs, mb_vector,mb_rewards, mb_values,mb_ps,mb_hidden_state,mb_actions,mb_done = [], [], [], [], [], [],[],[]
-        with torch.no_grad():
+        with torch.no_grad():           
             while num_window < CopParameters.NUM_WINDOW:
                 mb_obs.append(self.map_obs)
                 mb_vector.append(self.map_vector)
@@ -78,8 +78,8 @@ class Runner(object):
 
         mb_returns = np.add(mb_advs, mb_values)
         return mb_obs, mb_vector,mb_returns, mb_values,mb_actions, mb_ps, mb_hidden_state,num_episode,window_perf,one_episode_perf
-
-    def map_one_window(self,map_action): # run one episode
+    
+    def map_one_window(self,map_action=None): # run one episode
         self.map_done,rl_local_restart, rewards, self.map_obs,self.map_vector=self.env_map.joint_step(map_action)
         if rl_local_restart and not self.map_done:
             self.env_map.local_reset()
@@ -96,6 +96,7 @@ class Runner(object):
     def set_map_weights(self, weights):
         """load global weights to local models"""
         self.local_map_model.set_weights(weights)
+
 
 
 @ray.remote(num_cpus=1, num_gpus=SetupParameters.NUM_GPU / (TrainingParameters.N_ENVS + 1))

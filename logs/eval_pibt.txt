@@ -245,4 +245,22 @@ throughput:0.4349609375
 [2024-10-31 17:01:59.936249] time step:5000
 [2024-10-31 17:02:00.181688] evaluation times:9
 throughput:0.423828125
-mean throughput:0.31054687500000006, std throughput:0.23605108697403004
+mean throughput:0.31054687500000006, std throughput:0.23605108697403004start evaluation maps/Proportion_Maze_26_26_3.txt at:2024-11-09 10:05:55.495368
+[2024-11-09 10:05:57.378103] time step:0
+[2024-11-09 10:06:05.849162] evaluation times:0
+throughput:0.518
+[2024-11-09 10:06:07.622776] time step:0
+[2024-11-09 10:06:17.402638] evaluation times:1
+throughput:0.511
+[2024-11-09 10:06:18.862178] time step:0
+[2024-11-09 10:06:29.040945] evaluation times:2
+throughput:0.536
+[2024-11-09 10:06:30.373375] time step:0
+[2024-11-09 10:06:40.092034] evaluation times:3
+throughput:0.524
+[2024-11-09 10:06:41.593226] time step:0
+[2024-11-09 10:06:51.827825] evaluation times:4
+throughput:0.504
+mean throughput:0.5186, std throughput:0.010983624174196795
+
+
