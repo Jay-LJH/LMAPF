@@ -9,7 +9,6 @@ from gym_maze.utils import read_in_kiva_map, kiva_env_str2number, kiva_tile_to_c
 
 
 class MazeView2D:
-
     def __init__(
             self,
             maze_name="Maze2D",
@@ -23,7 +22,6 @@ class MazeView2D:
             domain="kiva",  # one of ["kiva", "default"]
             logdir=None,
     ):
-
         # PyGame configurations
         pygame.init()
         pygame.display.set_caption(maze_name)

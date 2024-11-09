@@ -123,7 +123,6 @@ class CO_MAPFEnv(gym.Env):
         self.pibt_time = 0
         return
     
-
     def local_reset(self):
         succ=self.rhcr.update_system(self.true_path)
         self.rhcr.update_start_goal(EnvParameters.H)

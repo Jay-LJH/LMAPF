@@ -12,6 +12,8 @@ def main(
     domain="kiva", # one of ["kiva", "default"]
 ):
     print("Show maze")
+    print("map_file: ", map_file)
+    print("path_file: ", path_file)
     logdir = LogDir(name="pygame_capture")
     env = MazeEnv(map_file, domain=domain, logdir=logdir)
     env.render()

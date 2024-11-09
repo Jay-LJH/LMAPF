@@ -37,7 +37,7 @@ class EnvParameters:
     GAP=3
     H=5
     OBSTACLE_RATE = 0.3
-    AGENT_RATE = 0.4
+    AGENT_RATE = 0.8
     travel_value = 0
     obstacle_value = -1
     eject_value = -2
@@ -68,7 +68,7 @@ class SetupParameters:
 
 class RecordingParameters:
     RETRAIN = False
-    WANDB = False
+    WANDB = True
     ENTITY = 'JayLiu'  #记得换成自己的wandb account
     TIME = datetime.datetime.now().strftime('%d-%m-%y%H%M')
     EXPERIMENT_PROJECT = 'LMAPF'

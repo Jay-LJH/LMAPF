@@ -5,8 +5,8 @@ from util import set_global_seeds
 import networkx as nx
 from map_generator import *
 from CO_mapf_gym_pibt import CO_MAPFEnv
-RUN_STEP=5120
-EVAL_TIMES=10
+RUN_STEP=1000
+EVAL_TIMES=5
 
 class selector:
     def __init__(self,map,probaility,seed=42,file_name=None):

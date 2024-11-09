@@ -229,7 +229,7 @@ bool PIBT_MAPD::funcPIBT(Agent *ai, Agent *aj)
 
 bool PIBT_MAPD::funcPIBT_without_guide(Agent* ai, Agent* aj)
 {
-  // compare two nodes
+    // compare two nodes
     auto node_compare = [&](const State& v, const State& u) {
         // tie breaker
         int d_v = G.heuristics.at(ai->g)[v.location];   
