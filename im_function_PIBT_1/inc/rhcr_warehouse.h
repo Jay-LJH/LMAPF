@@ -4,7 +4,7 @@
 class RHCR_warehouse : public RHCR_class_pibt_learn
 {
 public:
-    boost::unordered_map<int, int> drives_in_induct_stations; // number of robot in each stations
+    std::unordered_map<int, int> drives_in_induct_stations; // number of robot in each stations
     RHCR_warehouse(int seed, int num_of_robots, int rows, int cols,
                    int env_id, vector<vector<int>> py_map, vector<vector<int>> station_map, std::string project_path);
     ~RHCR_warehouse();

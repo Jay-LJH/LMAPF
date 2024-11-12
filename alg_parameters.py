@@ -4,7 +4,7 @@ import datetime
 
 # parameters for setting up the environment
 class runParameters:
-    N_NODE = 408
+    N_NODE = 460
     VEC_LEN = 408
     N_AGENT = 160
     WORLD_HIGH = 26

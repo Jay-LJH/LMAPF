@@ -138,7 +138,7 @@ class CO_MAPFEnv(gym.Env):
     def local_reset(self):
         succ=self.rhcr.update_system(self.true_path)
         self.rhcr.update_start_goal(EnvParameters.H)
-        self.goals_id = np.zeros(self.num_agents,dtype=np.int32)
+        # self.goals_id = np.zeros(self.num_agents,dtype=np.int32)
         self.local_time_step=0
         self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
         return True

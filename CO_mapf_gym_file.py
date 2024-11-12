@@ -120,7 +120,7 @@ class CO_MAPFEnv(gym.Env):
     def local_reset(self):  # update goals
         succ=self.rhcr.update_system(self.true_path)
         self.rhcr.update_start_goal(EnvParameters.H)
-        self.goals_id = np.zeros(self.num_agents,dtype=np.int32)
+        # self.goals_id = np.zeros(self.num_agents,dtype=np.int32)
         self.local_time_step=0
         self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
         return True
@@ -202,10 +202,6 @@ class CO_MAPFEnv(gym.Env):
             action[i]=self.get_action((self.agent_poss[i][0]-past_position[i][0],self.agent_poss[i][1]-past_position[i][1]))
             self.agent_state[self.agent_poss[i]] += 1
             uti_map[int(action[i]), self.agent_poss[i][0], self.agent_poss[i][1]] += 1
-            if self.agent_poss[i] == self.rhcr.rl_agent_goals[i][self.goals_id[i]]:
-                self.goals_id[i]+=1
-                self.all_finished_task+=1
-                self.elapsed[i]=0
             if self.agent_poss[i] == self.rhcr.rl_agent_goals[i][self.goals_id[i]]:
                 self.finished_task+=1
                 self.goals_id[i]+=1

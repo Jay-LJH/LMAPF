@@ -8,3 +8,4 @@ h_maps/
 *.ipynb
 .dir_hash
 logs/
+test.py

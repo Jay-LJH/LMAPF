@@ -75,7 +75,7 @@ void MazeGraph::preprocessing(const std::string &project_path, int env_id)
         for (int j = 0; j < cols; j++)
         {
             int pos = i * cols + j;
-            if (this->types[pos] == "Travel")
+            if (this->types[pos] != "Obstacle")
             {
                 heuristics[pos] = compute_heuristics(pos);
             }

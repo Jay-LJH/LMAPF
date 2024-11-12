@@ -12,12 +12,7 @@ probability=$3
 log_file="logs/select_$probability.log"
 
 {
-    selectors=("random" "pibt" "BC")
-    python eval_rl_select.py \
-        --map_path "$maze_path" \
-        --model_path "$model_path" \
-        --selector "all" \
-        --probability 1.0 
+    selectors=("pibt" "BC" "random")  
     for selector in "${selectors[@]}"
     do
         python eval_rl_select.py \
@@ -26,4 +21,9 @@ log_file="logs/select_$probability.log"
             --selector "$selector" \
             --probability "$probability"
     done  
+    python eval_rl_select.py \
+        --map_path "$maze_path" \
+        --model_path "$model_path" \
+        --selector "all" \
+        --probability 1.0 
 } | tee "$log_file"

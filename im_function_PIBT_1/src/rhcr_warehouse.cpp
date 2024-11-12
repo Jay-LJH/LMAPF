@@ -6,22 +6,17 @@ RHCR_warehouse::RHCR_warehouse(int seed, int num_of_robots, int rows, int cols,
 {
     RHCR_class_pibt_learn::G =new SortingGrid();
     solver = new PIBT_MAPD(*RHCR_class_pibt_learn::G, seed, rows * cols);
-    G = static_cast<SortingGrid*>(RHCR_class_pibt_learn::G);
+    this->G = static_cast<SortingGrid*>(RHCR_class_pibt_learn::G);
     this->env_id = env_id;
     this->path = project_path;
     srand(seed);
-    G->load_map(py_map, station_map, rows, cols);
-    G->preprocessing(project_path, env_id); // calculated heuristic of all goals
-    for (const auto induct : G->inducts)
+    this->G->load_map(py_map, station_map, rows, cols);
+    this->G->preprocessing(project_path, env_id); // calculated heuristic of all goals
+    for (const auto induct : this->G->inducts)
     {
         drives_in_induct_stations[induct.second] = 0;
     }
     initialize();                          // random choose start location and according to cost chose goal
-    for(int i=0;i<num_of_robots;i++)
-    {
-        cout<<"agent "<<i<<" start at "<<rl_agent_poss[i].first<<","<<rl_agent_poss[i].second;
-        cout<<" goal at "<<rl_agent_goals[i][0].first<<","<<rl_agent_goals[i][0].second<<endl;
-    }
 };
 
 RHCR_warehouse::~RHCR_warehouse() {};
@@ -38,7 +33,6 @@ void RHCR_warehouse::initialize()
     timestep = 0;
     initialize_start_locations(); // randomly chose empty cell
     initialize_goal_locations();  // assign goal from eject(random) and induct station(according to cost)
-
     // initialize induct station counter
     for (int k = 0; k < num_of_robots; k++)
     {
@@ -134,7 +128,7 @@ void RHCR_warehouse::update_goal_locations()
             else if (G->types[goal.first] == "Eject")
             {
                 next = assign_induct_station(curr.first);
-                drives_in_induct_stations[next]++; // number of tasks on it +++, used to calculate cost during assign new induct goal
+                drives_in_induct_stations[next]++; // number of tasks on it +++, used to calculate cost during assign new induct goal              
             }
             else
             {

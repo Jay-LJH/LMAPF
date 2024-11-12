@@ -61,39 +61,17 @@ void SortingGrid::load_map(vector<vector<int>>& py_map,vector<vector<int>>& stat
     }
 }
 
-// compute heuristics table for all inducts and ejects nodes
-// read from file if exists, otherwise compute and save to file
-void SortingGrid::preprocessing(const std::string& project_path,int env_id)
+void SortingGrid::preprocessing(const std::string &project_path, int env_id)
 {
-    std::string fname;
-    fname = project_path+"/"+std::to_string(env_id) +std::to_string(rows) + std::to_string(cols)+ "_heuristics_table.txt";
-    std::ifstream myfile(fname.c_str());
-    if (myfile.is_open())
+    for (int i = 0; i < rows; i++)
     {
-        bool succ = load_heuristics_table(myfile);
-        myfile.close();
-        if (!succ)
+        for (int j = 0; j < cols; j++)
         {
-            std::cout << "Error: Heuristics table is not correct!" << std::endl;
-            exit(1);
-        }
-        // ensure that the heuristic table is correct
-    }
-    else
-    {
-        // compute heuristics for all inducts and ejects nodes and save them
-        for (auto induct : inducts)
-        {
-            heuristics[induct.second] = compute_heuristics(induct.second);  // first is id, second is location
-        }
-        for (auto eject_station : ejects)
-        {
-            for (int eject : eject_station.second)
+            int pos = i * cols + j;
+            if (this->types[pos] != "Obstacle")
             {
-                heuristics[eject] = compute_heuristics(eject);
+                heuristics[pos] = compute_heuristics(pos);
             }
         }
-        save_heuristics_table(fname);
     }
-
 }

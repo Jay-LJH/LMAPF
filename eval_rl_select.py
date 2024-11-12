@@ -10,7 +10,7 @@ import sys
 from CO_mapf_gym_select import CO_MAPFEnv
 import datetime
 import argparse
-RUN_STEP = 5120
+RUN_STEP = 2000
 record = False
 EVAL_TIMES=1 if record else 5
 # recording path and collide times
@@ -23,7 +23,7 @@ class Runner(object):
         self.local_device = torch.device('cuda') if SetupParameters.USE_GPU_LOCAL else torch.device('cpu')
         self.local_map_model = MapModel(env_id, self.local_device)
         self.K = self.env_map.num_node
-        restore_path = 'models/LMAPF/'+ model_path+"/final"
+        restore_path = 'models/LMAPF/'+ model_path+"/903680"
         map_net_path_checkpoint = restore_path + "/map_net_checkpoint.pkl"
         map_net_dict = torch.load(map_net_path_checkpoint)
         self.local_map_model.network.load_state_dict(map_net_dict['model'])
@@ -60,7 +60,7 @@ def parse_arguments():
     
     parser.add_argument('--model_path',
                         type=str,
-                        default='26_26_3',
+                        default='26_26_3_003',
                         help='Path for the model')
     
     parser.add_argument('--selector',
@@ -84,7 +84,7 @@ def parse_arguments():
    
     parser.add_argument('--step',
                         type=int,
-                        default=5120,
+                        default=2000,
                         help='Number of max steps (default: 1000)')
     
     parser.add_argument('--eval_times',

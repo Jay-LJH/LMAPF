@@ -87,6 +87,7 @@ class CO_MAPFEnv(gym.Env):
                     self.node_poss.append((i, j))
                     self.node_index_dict[(i,j)]=node_index
                     node_index+=1
+        
 
         for node_index, node in enumerate(self.node_poss):
             self.nearby_node_dict[node_index] = []
@@ -126,7 +127,7 @@ class CO_MAPFEnv(gym.Env):
     def local_reset(self):
         succ=self.rhcr.update_system(self.true_path)
         self.rhcr.update_start_goal(EnvParameters.H)
-        self.goals_id = np.zeros(self.num_agents,dtype=np.int32)
+        # self.goals_id = np.zeros(self.num_agents,dtype=np.int32)
         self.local_time_step=0
         self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
         return True
@@ -171,7 +172,7 @@ class CO_MAPFEnv(gym.Env):
         return
 
     def joint_step(self,map_action):
-        self.time_step+=1
+        self.time_step+=1   
         self.local_time_step+=1
         self.joint_move(map_action)
         actor_obs,actor_vec = self.observe_for_map()
