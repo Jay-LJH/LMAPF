@@ -1,11 +1,10 @@
 import numpy as np
 import ray
 import torch
-
-from alg_parameters import *
-from CO_mapf_gym_file import CO_MAPFEnv
-from util import *
 from map_model import MapModel
+from alg_parameters import *
+from CO_mapf_gym_agent import CO_MAPFEnv
+from util import *
 
 class Runner(object):
     """sub-process used to collect experience"""
@@ -36,7 +35,7 @@ class Runner(object):
                     [self.map_hidden_state[0].cpu().detach().numpy(), self.map_hidden_state[1].cpu().detach().numpy()])
                 mb_done.append(self.map_done)
                 map_action, ps, v, self.map_hidden_state= self.local_map_model.step(self.map_obs,self.map_vector,
-                                                                           self.map_hidden_state,self.num_node)            
+                                                                           self.map_hidden_state,self.num_agent)            
                 mb_values.append(v)
                 mb_ps.append(ps)
                 mb_actions.append(map_action)
@@ -87,16 +86,14 @@ class Runner(object):
     def map_reset(self):
         self.env_map.global_reset()
         self.map_hidden_state = (
-            torch.zeros((self.num_node, CopParameters.NET_SIZE)).to(self.local_device),
-            torch.zeros((self.num_node, CopParameters.NET_SIZE)).to(self.local_device))
+            torch.zeros((self.num_agent, CopParameters.NET_SIZE)).to(self.local_device),
+            torch.zeros((self.num_agent, CopParameters.NET_SIZE)).to(self.local_device))
         self.map_obs,self.map_vector= self.env_map.observe_for_map()
         return
 
     def set_map_weights(self, weights):
         """load global weights to local models"""
         self.local_map_model.set_weights(weights)
-
-
 
 @ray.remote(num_cpus=1, num_gpus=SetupParameters.NUM_GPU / (TrainingParameters.N_ENVS + 1))
 class RLRunner(Runner):
@@ -112,6 +109,3 @@ if __name__ == "__main__":
     job_results = env.map_run()
 
     print("test")
-
-
-

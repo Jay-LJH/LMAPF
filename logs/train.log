@@ -1,10 +1,10 @@
-2024-11-12 02:14:00,904	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2024-12-16 19:04:12,622	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
 wandb: Currently logged in as: liujay (liujay-National University of Singapore Students' Union). Use `wandb login --relogin` to force relogin
-wandb: wandb version 0.18.6 is available!  To upgrade, please run:
+wandb: wandb version 0.19.1 is available!  To upgrade, please run:
 wandb:  $ pip install wandb --upgrade
 wandb: Tracking run with wandb version 0.13.4
-wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241112_021402-71kyit3w
+wandb: Run data is saved locally in /home/marmot/ljh/LMAPF/wandb/run-20241216_190413-lafknar9
 wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run golden-resonance-30
+wandb: Syncing run curious-dust-34
 wandb: ⭐️ View project at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF
-wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/71kyit3w
+wandb: 🚀 View run at https://wandb.ai/liujay-National%20University%20of%20Singapore%20Students%27%20Union/LMAPF/runs/lafknar9

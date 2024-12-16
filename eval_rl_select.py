@@ -1,7 +1,6 @@
 import os
 from util import *
 import numpy as np
-from util import set_global_seeds
 import torch
 from alg_parameters import *
 from map_model import MapModel
@@ -23,7 +22,7 @@ class Runner(object):
         self.local_device = torch.device('cuda') if SetupParameters.USE_GPU_LOCAL else torch.device('cpu')
         self.local_map_model = MapModel(env_id, self.local_device)
         self.K = self.env_map.num_node
-        restore_path = 'models/LMAPF/'+ model_path+"/903680"
+        restore_path = 'models/LMAPF/'+ model_path+"/final"
         map_net_path_checkpoint = restore_path + "/map_net_checkpoint.pkl"
         map_net_dict = torch.load(map_net_path_checkpoint)
         self.local_map_model.network.load_state_dict(map_net_dict['model'])

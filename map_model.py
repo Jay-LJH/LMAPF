@@ -5,7 +5,7 @@ from torch.cuda.amp.autocast_mode import autocast
 from torch.cuda.amp.grad_scaler import GradScaler
 from alg_parameters import *
 from map_net import MAP_ACNet
-
+from util import print_once
 
 class MapModel(object):
 
@@ -28,7 +28,6 @@ class MapModel(object):
         observation = torch.from_numpy(observation).to(self.device)
         vector = torch.from_numpy(vector).to(self.device)
         ps, v, _, hidden_state= self.network(observation, vector, hidden_state)
-
         actions = np.zeros(num_agent)
         ps = np.squeeze(ps.cpu().detach().numpy())
         v = v.cpu().detach().numpy()
