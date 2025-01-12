@@ -26,4 +26,4 @@ else
     echo "Directory content has not changed. No need to rebuild."
 fi
 
-nohup python driver_agent.py "$@" > ./logs/train.log 2>&1 &
+nohup python driver_region.py "$@" > ./logs/train.log 2>&1 &

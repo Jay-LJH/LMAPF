@@ -30,6 +30,8 @@ class CopParameters:
     COLL_R=-0.3
     TOP_NUM=3
     TEAM_REWARD=0.25
+    REGION_GAP = 2
+    ADDITIONAL_FOV = 2
 
 class EnvParameters:
     N_ACTIONS = 5
