@@ -2,7 +2,7 @@ import copy
 from util import *
 import gym
 import numpy as np
-from im_function_PIBT_1.build import lifelong_pibt_1
+from PIBT.build import PIBT
 from alg_parameters import *
 from collections import deque
 import os
@@ -28,7 +28,9 @@ class CO_MAPFEnv(gym.Env):
             config = "maps/" + file_name + ".config"
         if os.path.exists(config):
                 read_config(config)
-        self.world_high,self.world_wide,self.total_map=read_map(path)     
+        self.world_high,self.world_wide,self.total_map=read_map(path)
+        self.obstacle_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32) 
+        self.obstacle_map[self.total_map == self.obstacle_value] = 1    
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
@@ -40,7 +42,7 @@ class CO_MAPFEnv(gym.Env):
         self.wait_map=np.zeros((self.world_high,self.world_wide))
         self.build_sorting_map()
         self.build_guide_map()        
-    
+    # deprecated
     def build_sorting_map(self):
         self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         eject_station_id=10000
@@ -96,7 +98,7 @@ class CO_MAPFEnv(gym.Env):
     def global_reset(self,rand = False,seed=42):
         if rand:
             seed = random.randint(0, 100000)
-        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, runParameters.N_AGENT, 1,self.total_map, ".")
+        self.rhcr=PIBT.MazeGraph(self.total_map)
         self.rhcr.update_start_goal(EnvParameters.H)
         # indicate the number of robots in each grids
         self.agent_state=np.zeros((self.world_high,self.world_wide))  
@@ -219,7 +221,7 @@ class CO_MAPFEnv(gym.Env):
             rewards=np.zeros((0, runParameters.N_NODE), dtype=np.float32)
         else:
             rewards=self.joint_move(map_action)
-        actor_obs,actor_vec = self.observe_for_map()
+        actor_obs = self.observe_for_map()
         if self.time_step >= CopParameters.EPISODE_LEN:
             done = True
         else:
@@ -228,11 +230,10 @@ class CO_MAPFEnv(gym.Env):
             local_done=True
         else:
             local_done=False
-        return done, local_done, rewards, actor_obs,actor_vec
+        return done, local_done, rewards, actor_obs
 
     def observe_for_map(self):
         map_obs = np.zeros((1, runParameters.N_NODE,CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV), dtype=np.float32)
-        map_vector=np.expand_dims(np.eye(runParameters.N_NODE,dtype=np.float32), axis=0)
         if self.time_step != 0:
             sum_util_map = np.sum(self.uti_deque, axis=0)
             sum_util_map = 40 * sum_util_map / self.num_agents
@@ -265,7 +266,6 @@ class CO_MAPFEnv(gym.Env):
         for node in range(runParameters.N_NODE):
             FOV_top, FOV_bottom, FOV_left, FOV_right, top_poss, bottom_poss, left_poss, right_poss,_ = self.obs_range[node]
             obs_map = np.ones((1, CopParameters.FOV, CopParameters.FOV))
-            induct_eject_map = np.zeros((1, CopParameters.FOV, CopParameters.FOV))
             agent_map = np.zeros((1,  CopParameters.FOV, CopParameters.FOV))
             first_map = np.zeros((1, CopParameters.FOV, CopParameters.FOV))
             worse_map = np.zeros((1, CopParameters.FOV, CopParameters.FOV))
@@ -276,7 +276,6 @@ class CO_MAPFEnv(gym.Env):
             my_worse_map = agent_worse_map[:,node,:,:]
 
             obs_map[:, FOV_top:FOV_bottom, FOV_left:FOV_right] = self.obstacle_map[top_poss:bottom_poss, left_poss:right_poss]
-            induct_eject_map[:,FOV_top:FOV_bottom, FOV_left:FOV_right] = self.eject_induct_map[top_poss:bottom_poss,left_poss:right_poss]
             all_h_map[:,FOV_top:FOV_bottom, FOV_left:FOV_right] = self.world.all_h_map[:,top_poss:bottom_poss, left_poss:right_poss]
             util_map[:, FOV_top:FOV_bottom, FOV_left:FOV_right] = sum_util_map[:, top_poss:bottom_poss,\
                                                                        left_poss:right_poss]
@@ -286,11 +285,11 @@ class CO_MAPFEnv(gym.Env):
             worse_map[:,  FOV_top:FOV_bottom, FOV_left:FOV_right] = all_worse_map[top_poss:bottom_poss,left_poss:right_poss]
             worse_map-=my_worse_map
             order_map[:, FOV_top:FOV_bottom, FOV_left:FOV_right] = all_order_map[top_poss:bottom_poss, left_poss:right_poss]
-            ag_obs = np.concatenate([obs_map,induct_eject_map,agent_map,first_map,worse_map,all_h_map,util_map,order_map,my_first_map,my_worse_map], axis=0)
+            ag_obs = np.concatenate([obs_map,agent_map,first_map,worse_map,all_h_map,util_map,order_map,my_first_map,my_worse_map], axis=0)
             map_obs[:, node, :, :, :] = ag_obs
         map_obs[:,:,3,:,:]/=4
         map_obs[:,:,4,:,:]/=4
-        return map_obs,map_vector
+        return map_obs
 
     def calculate_info(self):
         perf_dict = {'throughput':0, "wait":0,"congestion":0}

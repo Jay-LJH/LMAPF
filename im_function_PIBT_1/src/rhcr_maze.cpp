@@ -85,7 +85,7 @@ void RHCR_maze::update_goal_locations()
         {
             goal = goal_locations[k].back();
         }
-        int min_timesteps = G->get_Manhattan_distance(curr.first, goal.first); // cannot use h values, because graph edges may have weights
+        int min_timesteps = G->get_Manhattan_distance(curr.first, goal.first); // cannot use h values directly, because graph edges may have weights
         min_timesteps = max(min_timesteps, goal.second);                       // what does second mean->the earlest arrive time
         // when the agent might finish its tasks during the next planning horizon
         // assign new tasks to the agent that keep the agent busy

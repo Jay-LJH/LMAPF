@@ -24,10 +24,9 @@ class MapModel(object):
         """load global weights to local models"""
         self.network.load_state_dict(weights)
 
-    def step(self, observation, vector,hidden_state, num_agent):
+    def step(self, observation,hidden_state, num_agent):
         observation = torch.from_numpy(observation).to(self.device)
-        vector = torch.from_numpy(vector).to(self.device)
-        ps, v, _, hidden_state= self.network(observation, vector, hidden_state)
+        ps, v, _, hidden_state= self.network(observation, hidden_state)
         actions = np.zeros(num_agent)
         ps = np.squeeze(ps.cpu().detach().numpy())
         v = v.cpu().detach().numpy()
@@ -35,10 +34,9 @@ class MapModel(object):
             actions[i] = np.random.choice(range(ps.shape[1]), p=ps[i])
         return actions, ps, v,hidden_state
 
-    def greedy_step(self, observation, vector, hidden_state, num_agent):
+    def greedy_step(self, observation, hidden_state, num_agent):
         observation = torch.from_numpy(observation).to(self.device)
-        vector = torch.from_numpy(vector).to(self.device)
-        ps, v, _, hidden_state= self.network(observation, vector, hidden_state)
+        ps, _, hidden_state= self.network(observation, hidden_state)
 
         actions = np.zeros(num_agent)
         ps = np.squeeze(ps.cpu().detach().numpy())
@@ -47,20 +45,18 @@ class MapModel(object):
             actions[i] = np.argmax(ps[i])
         return actions, ps, v,hidden_state
 
-    def value(self, observation,  vector,hidden_state):
+    def value(self, observation, hidden_state):
         observation = torch.from_numpy(observation).to(self.device)
-        vector = torch.from_numpy(vector).to(self.device)
-        _, v, _, _= self.network(observation,  vector,hidden_state)
+        _, v, _, _= self.network(observation, hidden_state)
         v =  np.squeeze(v.cpu().detach().numpy())
         return v
 
-    def train(self, observation,  vector,returns, old_v, action, old_ps,input_state):
+    def train(self, observation, returns, old_v, action, old_ps,input_state):
         """train model by reinforcement learning PPO"""
         self.net_optimizer.zero_grad()
 
         # from numpy to torch
         observation = torch.from_numpy(observation).to(self.device)
-        vector = torch.from_numpy(vector).to(self.device)
         returns = torch.from_numpy(returns).to(self.device)
         old_v = torch.from_numpy(old_v).to(self.device)
         action = torch.from_numpy(action).to(self.device)
@@ -76,7 +72,7 @@ class MapModel(object):
         advantage = (advantage - advantage.mean()) / (advantage.std() + 1e-6)
 
         with autocast():
-            new_ps, new_v,  policy_sig, _ = self.network(observation,vector, input_state)
+            new_ps, new_v,  policy_sig, _ = self.network(observation, input_state)
             new_p = new_ps.gather(-1, action)
             old_p = old_ps.gather(-1, action)
             ratio = torch.exp(torch.log(torch.clamp(new_p, 1e-6, 1.0)) - torch.log(torch.clamp(old_p, 1e-6, 1.0)))

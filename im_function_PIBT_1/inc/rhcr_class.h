@@ -57,6 +57,6 @@ public:
     }
 
 protected:
-    BasicGraph *G; // it should be a pointer to basegraph, but keep it for convenience
+    BasicGraph *G; // it should be a pointer to basegraph
     PIBT_MAPD *solver;
 };

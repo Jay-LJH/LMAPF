@@ -31,10 +31,10 @@ class MAP_ACNet(nn.Module):
         self.relu = nn.ReLU(inplace=True)
         self.conv2 = nn.Conv2d(CopParameters.NET_SIZE // 2,CopParameters.NET_SIZE // 2,kernel_size=3,stride=1,padding=1,groups=1,bias=False, dilation=1)
         self.maxpool = nn.MaxPool2d(2, 2) # pool window:2, stride:
-        self.downsample2 = nn.Conv2d(CopParameters.NET_SIZE // 2, CopParameters.NET_SIZE-CopParameters.NET_VEC, kernel_size=1, stride=1, bias=False)
-        self.conv3 = nn.Conv2d(CopParameters.NET_SIZE // 2,CopParameters.NET_SIZE-CopParameters.NET_VEC,kernel_size=3,stride=1,padding=1,groups=1,bias=False, dilation=1)
+        self.downsample2 = nn.Conv2d(CopParameters.NET_SIZE // 2, CopParameters.NET_SIZE, kernel_size=1, stride=1, bias=False)
+        self.conv3 = nn.Conv2d(CopParameters.NET_SIZE // 2,CopParameters.NET_SIZE,kernel_size=3,stride=1,padding=1,groups=1,bias=False, dilation=1)
         self.relu2 = nn.ReLU(inplace=True)
-        self.conv4 = nn.Conv2d(CopParameters.NET_SIZE-CopParameters.NET_VEC,CopParameters.NET_SIZE-CopParameters.NET_VEC,kernel_size=3,stride=1,padding=1,groups=1,bias=False, dilation=1)
+        self.conv4 = nn.Conv2d(CopParameters.NET_SIZE,CopParameters.NET_SIZE,kernel_size=3,stride=1,padding=1,groups=1,bias=False, dilation=1)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
 
         for m in self.modules():
@@ -59,17 +59,16 @@ class MAP_ACNet(nn.Module):
         self.softmax_layer = nn.Softmax(dim=-1)
         self.value_layer = init3_(nn.Linear(CopParameters.NET_SIZE, 1))
 
-        self.layer_norm_1 = nn.LayerNorm(CopParameters.NET_SIZE-CopParameters.NET_VEC)
+        self.layer_norm_1 = nn.LayerNorm(CopParameters.NET_SIZE)
         self.layer_norm_2 =nn.LayerNorm(CopParameters.NET_SIZE)
         self.layer_norm_3 = nn.LayerNorm(CopParameters.NET_SIZE)
         self.layer_norm_4 = nn.LayerNorm(CopParameters.NET_SIZE)
 
     @autocast()
-    def forward(self, x,x_1, hidden_state):
+    def forward(self, x, hidden_state):
         """run neural network"""
         num_agent = x.shape[1]
         x = torch.reshape(x, (-1, CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV))
-        x_1 = torch.reshape(x_1, (-1, runParameters.VEC_LEN))
         identity = self.downsample1(x)  
         x = self.conv1(x)
         x = self.relu(x)
@@ -89,10 +88,11 @@ class MAP_ACNet(nn.Module):
         x = torch.flatten(x, 1)
         x = self.layer_norm_1(x)
 
-        x_1=F.relu(self.fully_connected_1(x_1))
-        x=torch.cat((x,x_1),-1)
-        x = self.layer_norm_2(x)
+        # x_1=F.relu(self.fully_connected_1(x_1))
+        # x=torch.cat((x,x_1),-1)
+        # x = self.layer_norm_2(x)
         
+        # residual connection
         identity=x
         x = F.relu(self.fully_connected_2(x))
         x = self.fully_connected_3(x)

@@ -70,7 +70,7 @@ class SetupParameters:
 
 class RecordingParameters:
     RETRAIN = False
-    WANDB = True
+    WANDB = False
     ENTITY = 'JayLiu'  #记得换成自己的wandb account
     TIME = datetime.datetime.now().strftime('%d-%m-%y%H%M')
     EXPERIMENT_PROJECT = 'LMAPF'

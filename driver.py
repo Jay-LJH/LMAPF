@@ -87,7 +87,7 @@ def main(sys_argv):
 
             temp_step=int(done_len*CopParameters.NUM_WINDOW)
             curr_steps+=int(done_len*CopParameters.NUM_WINDOW)
-            data_buffer = {"obs": [],"vector":[], "returns": [], "values": [], "action": [],"ps": [],"hidden_state":[]}
+            data_buffer = {"obs": [], "returns": [], "values": [], "action": [],"ps": [],"hidden_state":[]}
             perf_dict = map_perf()
             window_perf_dict = window_map_perf()
             for results in range(done_len):
@@ -120,7 +120,7 @@ def main(sys_argv):
                     end = start + CopParameters.MINIBATCH_SIZE
                     mb_inds = inds[start:end]
                     slices = (arr[mb_inds] for arr in
-                              (data_buffer["obs"],data_buffer["vector"],data_buffer["returns"],
+                              (data_buffer["obs"],data_buffer["returns"],
                                data_buffer["values"],data_buffer["action"],data_buffer["ps"],data_buffer["hidden_state"]))
                     mb_loss.append(global_map_model.train(*slices))
 

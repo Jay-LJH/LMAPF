@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script checks if the directory content has changed since the last build.   
 # If it has, it rebuilds the program
-DIR_PATH="im_function_PIBT_1"
+DIR_PATH="PIBT"
 HASH_FILE="./shells/.dir_hash"
 
 CURRENT_HASH=$(find "$DIR_PATH" -type f -exec sha256sum {} + | sort | sha256sum)

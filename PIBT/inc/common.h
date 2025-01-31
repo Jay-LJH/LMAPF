@@ -31,7 +31,11 @@ using std::ostream;
 using std::string;
 using std::max;
 using std::min;
+using std::vector;
 
+using Position = pair<int,int>;
+
+// CG: cost; DG: distance; WDG: weighted distance;
 enum heuristics_type { NONE, CG, DG, WDG, STRATEGY_COUNT };
 
 typedef tuple<int, int, int, int, bool> Constraint;
@@ -45,3 +49,12 @@ ostream& operator<<(ostream& os, const Conflict& conflict);
 
 ostream& operator<<(ostream& os, const Interval& interval);
 
+// hash function for pair<int, int>
+namespace std {
+    template <>
+    struct hash<std::pair<int, int>> {
+        size_t operator()(const std::pair<int, int>& p) const {
+            return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
+        }
+    };
+}

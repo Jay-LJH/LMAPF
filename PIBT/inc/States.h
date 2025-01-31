@@ -7,6 +7,7 @@ struct State //subset of path
     int timestep;
     int orientation;
 
+    // hash function for State
     struct Hasher
     {
         std::size_t operator()(const State& n) const  // overwrite
@@ -32,11 +33,10 @@ struct State //subset of path
 
     bool operator != (const State& other) const
     {
-        return timestep != other.timestep || location != other.location || orientation != other.orientation;
+        return !(*this == other);
     }
 
-    State(): location(-1), timestep(-1), orientation(-1) {}
-    State(int location, int timestep = -1, int orientation = -1):
+    State(int location = -1, int timestep = -1, int orientation = -1):
             location(location), timestep(timestep), orientation(orientation) {}
     State(const State& other) {location = other.location; timestep = other.timestep; orientation = other.orientation; }
 };

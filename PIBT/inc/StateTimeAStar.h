@@ -15,6 +15,7 @@ public:
     int goal_id; // the id of its current goal.
 
     // the following is used to comapre nodes in the OPEN list
+    // node in the OPEN list are ordered by f-val (top of the heap has min f-val)
     struct compare_node
     {
         // returns true if n1 > n2 (note -- this gives us *min*-heap).
@@ -27,6 +28,7 @@ public:
     };  // used by OPEN (heap) to compare nodes (top of the heap has min f-val, and then highest g-val)
 
     // the following is used to comapre nodes in the FOCAL list
+    // nodes in FOCAL with f < w * f(best), sorted by conflicts (top of the heap has min conflicts)
     struct secondary_compare_node
     {
         bool operator()(const StateTimeAStarNode* n1, const StateTimeAStarNode* n2) const // returns true if n1 > n2
@@ -37,7 +39,7 @@ public:
             }
             return n1->conflicts >= n2->conflicts;  // n1 > n2 if it has more conflicts
         }
-    };  // used by FOCAL (heap) to compare nodes (top of the heap has min number-of-conflicts)
+    };  
 
     // define a typedefs for handles to the heaps (allow up to quickly update a node in the heap)
     fibonacci_heap< StateTimeAStarNode*, compare<StateTimeAStarNode::compare_node> >::
@@ -46,6 +48,8 @@ public:
         handle_type focal_handle;
 
     StateTimeAStarNode(): g_val(0), h_val(0), parent(nullptr), conflicts(0), depth(0), in_openlist(false), goal_id(0) {}
+    // initialize a node with a state, its g-value, its h-value, and a pointer to its parent
+    // set depth and goal based on the parent
     StateTimeAStarNode(const State& state, double g_val, double h_val, StateTimeAStarNode* parent, int conflicts):
         state(state), g_val(g_val), h_val(h_val), parent(parent), conflicts(conflicts), in_openlist(false)
     {
