@@ -2,33 +2,34 @@
 #include <random>
 #include "States.h"
 #include "BasicGraph.h"
+#include "MazeGraph.h"
 #include "common.h"
 #include "util.h"
 
-class PIBT_MAPD
+class PIBT
 {
 public:
-    vector<State> solution;
-    PIBT_MAPD(const BasicGraph& G, int seed, int map_size);
-    ~PIBT_MAPD();
-    const BasicGraph& G;
+    vector<int> solution;
+    PIBT(vector<vector<int>> &py_map,int num_of_agents,int seed);
+    ~PIBT();
+    MazeGraph G;
     int num_of_agents;
     vector<int> coll_times;
     int curr_ag_id=0;
-    vector<float> initialize(const vector<State>& starts);
-    void update(const vector< vector<pair<int, int> > >& goal_locations);
+    void initialize();
+    void update_goal(const vector<int> &goal_locations);
     // main
     bool run(const vector<vector<int>>& action_guide);
-    bool run();
 
 private:
   // PIBT agent
   struct Agent {
     int id;
-    State v_now;        // current location
-    State v_next;       // next location
+    int v_now;        // current location
+    int v_next;       // next location
     int g;            // goal
     int elapsed;        // eta
+    int init_d;       // initial distance
     float tie_breaker;  // epsilon, tie-breaker
   };
   vector<int> goal_id;

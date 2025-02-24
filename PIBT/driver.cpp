@@ -26,4 +26,9 @@ PYBIND11_MODULE(PIBT, m)
         .def("preprocessing", &MazeGraph::preprocessing)
         .def("visualize_heuristics_table", &MazeGraph::visualize_heuristics_table)
         .def("compute_heuristics", &MazeGraph::compute_heuristics);
+    py::class_<PIBT>(m, "PIBT")
+        .def(py::init<vector<vector<int>>&, int, int>())
+        .def("run", &PIBT::run)
+        .def("initialize", &PIBT::initialize)
+        .def("update_goal", &PIBT::update_goal);
 }
