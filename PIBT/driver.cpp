@@ -1,24 +1,17 @@
 ﻿#include "./pybind11/include/pybind11/pybind11.h"
 #include "./pybind11/include/pybind11/stl.h"
-// #include "rhcr_class.h"
 #include "./src/BasicGraph.cpp"
 #include "./src/common.cpp"
-// #include "./src/rhcr_class.cpp"
-// #include "./src/SortingGraph.cpp"
 #include "./src/States.cpp"
-#include "pibt_mapd.h"
-#include "./src/pibt_mapd.cpp"
+#include "pibt.h"
+#include "./src/pibt.cpp"
 #include "MazeGraph.h"
 #include "./src/MazeGraph.cpp"
-// #include "rhcr_warehouse.h"
-// #include "./src/rhcr_warehouse.cpp"
-// #include "rhcr_maze.h"
-// #include "./src/rhcr_maze.cpp"
 
 namespace py = pybind11;
 using namespace std;
 
-PYBIND11_MODULE(PIBT, m)
+PYBIND11_MODULE(pibt_1, m)
 {
     py::class_<MazeGraph>(m, "MazeGraph")
         .def(py::init<vector<vector<int>>&>())
@@ -30,5 +23,10 @@ PYBIND11_MODULE(PIBT, m)
         .def(py::init<vector<vector<int>>&, int, int>())
         .def("run", &PIBT::run)
         .def("initialize", &PIBT::initialize)
-        .def("update_goal", &PIBT::update_goal);
+        .def("update_goal", &PIBT::update_goal)
+        .def("get_heuri_map", &PIBT::get_heuri_map)
+        .def("agent_poss", &PIBT::agent_poss)
+        .def("elapsed", &PIBT::elapsed)
+        .def_readwrite("tie_breaker", &PIBT::tie_breaker)
+        .def_readwrite("agent_goals", &PIBT::agent_goals);
 }

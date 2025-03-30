@@ -15,7 +15,7 @@ class runParameters:
 class CopParameters:
     MAP_ACTION=5  # 0 right, 1 down, 2 left, 3 up， 4:wait
     OUTPUT_ACTION=60
-    OBS_CHANNEL=17
+    OBS_CHANNEL=16
     NET_SIZE = 128
     NET_VEC= 32
     EPISODE_LEN= 5120
@@ -55,7 +55,7 @@ class TrainingParameters:
     VALUE_COEF = 0.5
     POLICY_COEF = 1
     N_EPOCHS = 8
-    N_ENVS = 16 # number of processes, 2*cpu cores
+    N_ENVS = 4 # number of processes, 2*cpu cores
     N_MAX_STEPS = 4e7  # maximum number of time steps used in training
     opti_eps=1e-8
     weight_decay=0

@@ -29,7 +29,7 @@ void SortingGrid::load_map(vector<vector<int>>& py_map,vector<vector<int>>& stat
                 {
                     this->types[poss]="Eject";
                     int id_num=station_map[i][j];
-                    boost::unordered_map<int, std::list<int> >::iterator it = this->ejects.find(id_num);
+                    unordered_map<int, std::list<int> >::iterator it = this->ejects.find(id_num);
                     if (it == ejects.end())
                     {
                         this->ejects[id_num] = std::list<int>();

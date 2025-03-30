@@ -17,6 +17,7 @@ fi
 if [ "$CURRENT_HASH" != "$PREVIOUS_HASH" ]; then
     echo "Directory content has changed. Rebuilding and running the program."
     cd "$DIR_PATH/build"
+    cmake ..
     make clean
     make -j8
     cd ../..
@@ -26,4 +27,4 @@ else
     echo "Directory content has not changed. No need to rebuild."
 fi
 
-nohup python driver.py "$@" > ./logs/train.log 2>&1 &
+python eval_MAPF.py "$@" --model_path Maze27-02-251403 --map_path maze-32-32-4

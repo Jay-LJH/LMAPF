@@ -9,13 +9,11 @@
 #include <fstream>
 #include <set>
 #include <boost/heap/fibonacci_heap.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/unordered_map.hpp>
+#include <unordered_set>
+#include <unordered_map>
 
 using boost::heap::fibonacci_heap;
 using boost::heap::compare;
-using boost::unordered_set;
-using boost::unordered_map;
 
 using std::set;
 using std::vector;
@@ -32,6 +30,8 @@ using std::string;
 using std::max;
 using std::min;
 using std::vector;
+using std::unordered_set;
+using std::unordered_map;
 
 using Position = pair<int,int>;
 

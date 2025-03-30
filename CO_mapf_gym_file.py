@@ -2,7 +2,7 @@ import copy
 from util import *
 import gym
 import numpy as np
-from PIBT.build import PIBT
+from PIBT.build import pibt_1
 from alg_parameters import *
 from collections import deque
 import os
@@ -28,13 +28,13 @@ class CO_MAPFEnv(gym.Env):
             config = "maps/" + file_name + ".config"
         if os.path.exists(config):
                 read_config(config)
-        self.world_high,self.world_wide,self.total_map=read_map(path)
-        self.obstacle_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32) 
-        self.obstacle_map[self.total_map == self.obstacle_value] = 1    
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
         self.travel_value = 0
+        self.world_high,self.world_wide,self.total_map=read_map(path)
+        self.obstacle_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32) 
+        self.obstacle_map[self.total_map == self.obstacle_value] = 1    
         self.env_id=env_id
         self.project_path = os.getcwd() + "/h_maps"       
         self.num_agents=runParameters.N_AGENT
@@ -95,34 +95,29 @@ class CO_MAPFEnv(gym.Env):
 
     # rand: whether to use a fixed seed 
     # seed: the seed for random
-    def global_reset(self,rand = False,seed=42):
+    def global_reset(self,rand = True,seed=42):
         if rand:
             seed = random.randint(0, 100000)
-        self.rhcr=PIBT.MazeGraph(self.total_map)
-        self.rhcr.update_start_goal(EnvParameters.H)
+        self.pibt=pibt_1.PIBT(self.total_map,self.num_agents,seed)
         # indicate the number of robots in each grids
         self.agent_state=np.zeros((self.world_high,self.world_wide))  
-        self.agent_poss=self.rhcr.rl_agent_poss
+        self.agent_poss=self.pibt.agent_poss()
         for index, poss in enumerate(self.agent_poss):
             self.agent_state[poss] += 1
         # set recording to 0
-        self.time_step,self.local_time_step,self.all_finished_task=0,0,0
-        self.goals_id= np.zeros(self.num_agents, dtype=np.int32)
+        self.time_step,self.local_time_step=0,0
         self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
         self.uti_deque = deque(maxlen=CopParameters.UTIL_T)
         self.all_wait_map = np.zeros((self.world_high, self.world_wide))
         # handle heuristic value related things
         self.world=State(self.world_high,self.world_wide,self.node_poss) 
-        heuristic_map=self.rhcr.get_heuri_map()
+        heuristic_map=self.pibt.get_heuri_map()
         self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map) #convert and save
         self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
-        self.total_collisions=0
+        self.pibt_time = 0
         return
 
     def local_reset(self):  # update goals
-        succ=self.rhcr.update_system(self.true_path)
-        self.rhcr.update_start_goal(EnvParameters.H)
-        # self.goals_id = np.zeros(self.num_agents,dtype=np.int32)
         self.local_time_step=0
         self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
         return True
@@ -146,9 +141,10 @@ class CO_MAPFEnv(gym.Env):
             action_guidance[i, act_order[1]] = CopParameters.TOP_NUM-1
             action_guidance[i, act_order[2]] = CopParameters.TOP_NUM - 2
         # solve conflict by PIBT
-        coll_times=self.rhcr.run_pibt(action_guidance)
-        self.total_collisions+=sum(coll_times)
-        self.agent_poss=self.rhcr.rl_path
+        before_pibt = datetime.datetime.now()
+        done=self.pibt.run(action_guidance)
+        self.pibt_time += (datetime.datetime.now() - before_pibt).total_seconds()
+        self.agent_poss=self.pibt.agent_poss()
         uti_map = np.zeros((5, self.world_high, self.world_wide))
         # update final status
         for i in range(self.num_agents):
@@ -157,10 +153,10 @@ class CO_MAPFEnv(gym.Env):
             self.agent_state[self.agent_poss[i]] += 1
             uti_map[int(action[i]), self.agent_poss[i][0], self.agent_poss[i][1]] += 1
             self.true_path[i].append(self.agent_poss[i])
-            prioirty=self.world.all_priority[self.rhcr.rl_agent_goals[i][self.goals_id[i]]][past_position[i]]
+            prioirty=self.world.all_priority[self.pibt.agent_goals[i]][past_position[i]]
             node_index=self.node_index_dict[past_position[i]]
             agent_on_grid[node_index] += 1
-            rewards[:, node_index] += CopParameters.COLL_R * coll_times[i]
+            # rewards[:, node_index] += CopParameters.COLL_R * coll_times[i]
             if self.agent_poss[i] in prioirty[0]:
                 rewards[:, node_index] += CopParameters.BEST_R
             elif self.agent_poss[i] in prioirty[1]:
@@ -170,10 +166,8 @@ class CO_MAPFEnv(gym.Env):
             if action[i] == 0:
                 self.wait_map[self.agent_poss[i][0], self.agent_poss[i][1]] += 1
                 self.all_wait_map[self.agent_poss[i][0], self.agent_poss[i][1]] += 1
-            if self.agent_poss[i] == self.rhcr.rl_agent_goals[i][self.goals_id[i]]:
+            if self.agent_poss[i] == self.pibt.agent_goals[i]:
                 self.finished_task+=1
-                self.goals_id[i]+=1
-                self.all_finished_task+=1
                 self.elapsed[i]=0
 
         self.uti_deque.append(uti_map)
@@ -183,17 +177,16 @@ class CO_MAPFEnv(gym.Env):
                 team_agent_on_grid[node_index]+=agent_on_grid[neigbor]
         team_rewards=np.divide(team_rewards, team_agent_on_grid, out=np.zeros_like(team_rewards, dtype=np.float32), where=team_agent_on_grid!=0)
         rewards=rewards+CopParameters.TEAM_REWARD*team_rewards
-        return rewards
+        return done, rewards
     
     # run pibt without action guidance
     def joint_move_without_action(self):
         past_position = copy.copy(self.agent_poss)
         action = np.zeros(self.num_agents, dtype=np.int32)
         self.agent_state = np.zeros((self.world_high, self.world_wide))
-        coll_times=self.rhcr.run_pibt() # run PIBT without the guidance form RL
+        coll_times=self.pibt.run() # run PIBT without the guidance form RL
         coll_map=np.zeros((self.world_high,self.world_wide))
-        self.agent_poss=self.rhcr.rl_path
-        self.total_collisions+=sum(coll_times)
+        self.agent_poss=self.pibt.agent_poss()
         uti_map = np.zeros((5, self.world_high, self.world_wide))
         # update final status
         for i in range(self.num_agents):
@@ -204,10 +197,8 @@ class CO_MAPFEnv(gym.Env):
             action[i]=self.get_action((self.agent_poss[i][0]-past_position[i][0],self.agent_poss[i][1]-past_position[i][1]))
             self.agent_state[self.agent_poss[i]] += 1
             uti_map[int(action[i]), self.agent_poss[i][0], self.agent_poss[i][1]] += 1
-            if self.agent_poss[i] == self.rhcr.rl_agent_goals[i][self.goals_id[i]]:
+            if self.agent_poss[i] == self.pibt.agent_goals[i]:
                 self.finished_task+=1
-                self.goals_id[i]+=1
-                self.all_finished_task+=1
                 self.elapsed[i]=0
         self.uti_deque.append(uti_map)
         return  
@@ -220,17 +211,11 @@ class CO_MAPFEnv(gym.Env):
             self.joint_move_without_action()
             rewards=np.zeros((0, runParameters.N_NODE), dtype=np.float32)
         else:
-            rewards=self.joint_move(map_action)
+            done, rewards=self.joint_move(map_action)
         actor_obs = self.observe_for_map()
         if self.time_step >= CopParameters.EPISODE_LEN:
             done = True
-        else:
-            done = False
-        if self.local_time_step>= EnvParameters.H:
-            local_done=True
-        else:
-            local_done=False
-        return done, local_done, rewards, actor_obs
+        return done, rewards, actor_obs
 
     def observe_for_map(self):
         map_obs = np.zeros((1, runParameters.N_NODE,CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV), dtype=np.float32)
@@ -242,17 +227,16 @@ class CO_MAPFEnv(gym.Env):
         all_first_map = np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
         all_worse_map = np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
         all_order_map= np.zeros((runParameters.WORLD_HIGH, runParameters.WORLD_WIDE))
-        agents_order = [i for i in range(self.num_agents)]      
-        agents_order.sort(key=lambda x: (self.world.heuristic_map[self.rhcr.rl_agent_goals[x][self.goals_id[x]]][
-                                          self.agent_poss[x][0] * self.world_wide + self.agent_poss[x][1]], -self.elapsed[x],
-                                      -self.rhcr.tie_breaker[x])) # the former has higher priority
+        agents_order = [i for i in range(self.num_agents)]
+        agents_order.sort(key=lambda x: (-self.elapsed[x],
+                                      -self.pibt.tie_breaker[x])) # the former has higher priority
         agent_first_map = np.zeros((1,runParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
         agent_worse_map = np.zeros((1,runParameters.N_NODE, CopParameters.FOV, CopParameters.FOV))
         for visible_ag, poss in enumerate(self.agent_poss):
             node_index=self.node_index_dict[poss]
             _, _, _, _,_,_,_,_,top_left = self.obs_range[node_index]
             all_order_map[poss[0], poss[1]] = agents_order.index(visible_ag)+1
-            ag_goal = self.rhcr.rl_agent_goals[visible_ag][self.goals_id[visible_ag]]
+            ag_goal = self.pibt.agent_goals[visible_ag]
             first_poss = self.world.all_priority[ag_goal][poss][0]
             worse_poss = self.world.all_priority[ag_goal][poss][1]
             for first in first_poss:
@@ -302,7 +286,6 @@ class CO_MAPFEnv(gym.Env):
 
     def calculate_info_episode(self):
         perf_dict = {'throughput':0, "wait":0,"congestion":0}
-        perf_dict['throughput']= self.all_finished_task/CopParameters.EPISODE_LEN
         perf_dict["wait"]=sum(sum(self.all_wait_map))
         perf_dict["congestion"]=np.std(self.all_wait_map)
         return perf_dict

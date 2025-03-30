@@ -176,7 +176,7 @@ int RHCR_warehouse::assign_induct_station(int curr) const
 int RHCR_warehouse::assign_eject_station() const
 {
     int n = rand() % G->ejects.size();
-    boost::unordered_map<int, std::list<int>>::const_iterator it = G->ejects.begin();
+    unordered_map<int, std::list<int>>::const_iterator it = G->ejects.begin();
     std::advance(it, n);                // 访问G.ejects容器中第n个元素（从0开始计数）。然而，由于boost::unordered_map的无序性，"第n个元素"这一说法并没有明确的顺序含义，它仅仅表示按照容器内部顺序的第n个元素。
     int p = rand() % it->second.size(); // advance move the iterator n position
     auto it2 = it->second.begin();

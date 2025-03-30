@@ -1,6 +1,6 @@
 import gym
 import numpy as np
-from im_function_PIBT_1.build import lifelong_pibt_1
+from PIBT.build import pibt_1
 from alg_parameters import *
 import os
 from world_property import State
@@ -10,12 +10,13 @@ import datetime
 
 MAPdirDict = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1), 4: (-1, 0)}  #  0 wait ,1 right, 2 down, 3 left, 4 up
 actionDict = {v: k for k, v in MAPdirDict.items()}
-
+MAX_STEP = 1000
+MAX_TIME = 10
 numbers = [0, 1, 2, 3, 4]
 actions_combination_list = list(itertools.permutations(numbers, 3))
 
 class CO_MAPFEnv(gym.Env):
-    def __init__(self,env_id,episode_len,file_name=None):
+    def __init__(self,env_id,file_name=None):
         if file_name is None:
             self.path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
             self.config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
@@ -30,7 +31,6 @@ class CO_MAPFEnv(gym.Env):
         self.obstacle_value = -1
         self.travel_value = 0
         self.env_id=env_id
-        self.episode_len=episode_len
         self.project_path = os.getcwd() + "/h_maps"
         self.num_agents=runParameters.N_AGENT
         self.finished_task=0
@@ -89,70 +89,22 @@ class CO_MAPFEnv(gym.Env):
                     self.nearby_node_dict[node_index].append(self.node_index_dict[item])
 
     def global_reset_fix(self,seed):
-        self.rhcr=lifelong_pibt_1.RHCR_maze(seed, runParameters.N_AGENT, 1,self.total_map, ".")
-        self.rhcr.update_start_goal(EnvParameters.H)
-        self.agent_state=np.zeros((self.world_high,self.world_wide))
-        self.agent_poss=self.rhcr.rl_agent_poss
-        for index, poss in enumerate(self.agent_poss):
-            self.agent_state[poss] += 1
-        # set recording to 0
-        self.time_step,self.local_time_step,self.all_finished_task=0,0,0
-        self.goals_id= np.zeros(self.num_agents, dtype=np.int32)
-        self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
-        self.world=State(self.world_high,self.world_wide,self.node_poss)
-        heuristic_map=self.rhcr.get_heuri_map()
-        self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map) #convert and save
-        self.elapsed=np.zeros(self.num_agents)
-        self.global_path = [[self.agent_poss[i]] for i in range(self.num_agents)]
-        self.collide_times = []
+        self.pibt=pibt_1.PIBT(self.total_map,self.num_agents,seed)
+        self.time_step=0
+        self.pibt_time = 0
+        self.init_time = datetime.datetime.now()
         return
-
-    def local_reset(self):
-        succ=self.rhcr.update_system(self.true_path)
-        self.rhcr.update_start_goal(EnvParameters.H)
-        # self.goals_id = np.zeros(self.num_agents,dtype=np.int32)
-        self.local_time_step=0
-        self.true_path=[[self.agent_poss[i]] for i in range(self.num_agents)]
-        return True
-
     def joint_move(self):
-        self.agent_state = np.zeros((self.world_high, self.world_wide))
-        coll_times=self.rhcr.run_pibt() # run PIBT without the guidance form RL
-        coll_map=np.zeros((self.world_high,self.world_wide))
-        self.agent_poss=self.rhcr.rl_path
-
-        # update final status
-        for i in range(self.num_agents):
-            self.elapsed[i] +=1
-            self.agent_state[self.agent_poss[i]] += 1
-            self.true_path[i].append(self.agent_poss[i])
-            self.global_path[i].append(self.agent_poss[i])
-            coll_map[self.agent_poss[i]] += coll_times[i]
-
-            if self.agent_poss[i] == self.rhcr.rl_agent_goals[i][self.goals_id[i]]:
-                self.goals_id[i]+=1
-                self.all_finished_task+=1
-                self.elapsed[i]=0
-        assert len(np.argwhere(self.agent_state>1)) == 0
-        assert len(np.argwhere(self.agent_state < 0)) == 0
-        self.collide_times.append(coll_map)
-        return
+        action_guidance = np.zeros((self.num_agents,5), dtype=np.int32)
+        before_pibt = datetime.datetime.now()
+        done=self.pibt.run(action_guidance)
+        self.pibt_time += (datetime.datetime.now() - before_pibt).total_seconds()
+        return done
 
     def joint_step(self):
-        if(self.time_step%1000 == 0):
-            print("[{}] time step:{}".format(datetime.datetime.now(),self.time_step))
         self.time_step+=1
-        self.local_time_step+=1
-        self.joint_move()
-        if self.time_step >= self.episode_len:
-            done = True
-        else:
-            done = False
-        if self.local_time_step>= EnvParameters.H:
-            local_done=True
-        else:
-            local_done=False
-        return done, local_done
+        done = self.joint_move()
+        return done
 
     def get_action(self, direction):
         return actionDict[direction]

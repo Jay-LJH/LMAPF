@@ -1,18 +1,166 @@
-2025-01-20 12:52:59,974	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
-*** SIGTERM received at time=1737352493 on cpu 0 ***
-PC: @     0x78e94bba6b55  (unknown)  (unknown)
-    @     0x78e94ba42520  1790027824  (unknown)
-    @ ... and at least 2 more frames
-[2025-01-20 12:54:53,658 E 2661732 2661732] logging.cc:440: *** SIGTERM received at time=1737352493 on cpu 0 ***
-[2025-01-20 12:54:53,658 E 2661732 2661732] logging.cc:440: PC: @     0x78e94bba6b55  (unknown)  (unknown)
-[2025-01-20 12:54:53,658 E 2661732 2661732] logging.cc:440:     @     0x78e94ba42520  1790027824  (unknown)
-[2025-01-20 12:54:53,658 E 2661732 2661732] logging.cc:440:     @ ... and at least 2 more frames
+2025-02-27 22:05:11,141	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
 Usage stats collection is disabled.
 Welcome to LMAPF!
 
-episodes: 0, steps: 512 
-
-Saving Model !
-
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
 Saving Final Model !
 
+Traceback (most recent call last):
+  File "/home/marmot/ljh/LMAPF/driver.py", line 183, in <module>
+    main(sys.argv)
+  File "/home/marmot/ljh/LMAPF/driver.py", line 125, in main
+    mb_loss.append(global_map_model.train(*slices))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/ljh/LMAPF/map_model.py", line 75, in train
+    new_ps, new_v,  policy_sig, _ = self.network(observation, input_state)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/amp/autocast_mode.py", line 14, in decorate_autocast
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/ljh/LMAPF/map_net.py", line 72, in forward
+    identity = self.downsample1(x)  
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 463, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 459, in _conv_forward
+    return F.conv2d(input, weight, bias, self.stride,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Unable to find a valid cuDNN algorithm to run convolution

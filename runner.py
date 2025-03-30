@@ -77,9 +77,9 @@ class Runner(object):
         return mb_obs, mb_returns, mb_values,mb_actions, mb_ps, mb_hidden_state,num_episode,window_perf,one_episode_perf
     
     def map_one_window(self,map_action=None): # run one episode
-        self.map_done,rl_local_restart, rewards, self.map_obs=self.env_map.joint_step(map_action)
-        if rl_local_restart and not self.map_done:
-            self.env_map.local_reset() #do I need to reset the local env?
+        self.map_done, rewards, self.map_obs=self.env_map.joint_step(map_action)
+        # if rl_local_restart and not self.map_done:
+        #     self.env_map.local_reset() #do I need to reset the local env?
         return rewards
 
     def map_reset(self):

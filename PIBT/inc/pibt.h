@@ -16,11 +16,15 @@ public:
     int num_of_agents;
     vector<int> coll_times;
     int curr_ag_id=0;
+    vector<int> tie_breaker;
+    vector<pair<int,int>> agent_goals;
     void initialize();
     void update_goal(const vector<int> &goal_locations);
     // main
     bool run(const vector<vector<int>>& action_guide);
-
+    vector<pair<int,int>> agent_poss();
+    vector<int> elapsed();
+    auto get_heuri_map();
 private:
   // PIBT agent
   struct Agent {

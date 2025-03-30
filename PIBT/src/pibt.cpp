@@ -8,7 +8,9 @@ std::unordered_map<int, int> myMap = {
     {-26, 4},
 }; // 0 stay, 1 right, 2 down, 3 left, 4 up
 
-PIBT::PIBT(vector<vector<int>> &py_map, int num_of_agents, int seed) : G(py_map)
+PIBT::PIBT(vector<vector<int>> &py_map, int num_of_agents, int seed) : 
+    G(py_map),occupied_now(Agents(G.size(), nullptr)),
+    occupied_next(Agents(G.size(), nullptr))
 {
     this->MT = new std::mt19937(seed);
     myMap = {
@@ -19,7 +21,6 @@ PIBT::PIBT(vector<vector<int>> &py_map, int num_of_agents, int seed) : G(py_map)
         {-this->G.cols, 4},
     }; // 0 stay, 1 right, 2 down, 3 left, 4 up1
     this->num_of_agents = num_of_agents;
-
     initialize();
     solution.resize(num_of_agents,0);
 }
@@ -58,6 +59,8 @@ void PIBT::initialize()
             G.heuristics.at(goal_loc)[start_loc], // initial distance
             getRandomFloat(0, 1, MT)};            // tie-breaker
         A.push_back(a);
+        tie_breaker.push_back(a->tie_breaker);
+        agent_goals.push_back({goal_loc/G.cols, goal_loc%G.cols});
         init[start_loc] = true;
         goal[goal_loc] = true;
         occupied_now[start_loc] = a;
@@ -189,4 +192,29 @@ bool PIBT::funcPIBT(Agent *ai, Agent *aj)
     occupied_next[ai->v_now] = ai;
     ai->v_next = ai->v_now;
     return false;
+}
+
+vector<pair<int,int>> PIBT::agent_poss(){
+    vector<pair<int,int>> res(num_of_agents);
+    for(auto a:A){
+        res[a->id] = {a->v_now/G.cols,a->v_now%G.cols};
+    }
+    return res;
+}
+
+auto PIBT::get_heuri_map(){
+    unordered_map<pair<int,int>, vector<double>> res;
+    for (auto i:G.heuristics){
+        int x = i.first/G.cols;
+        int y = i.first%G.cols;
+        res[{x,y}] = i.second;     
+    }
+    return res;
+}
+vector<int> PIBT::elapsed(){
+    vector<int> res(num_of_agents);
+    for(auto a:A){
+        res[a->id] = a->elapsed;
+    }
+    return res;
 }
