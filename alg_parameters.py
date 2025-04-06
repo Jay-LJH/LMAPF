@@ -28,6 +28,7 @@ class CopParameters:
     SECOND_R=0
     WORSE_R=-1
     COLL_R=-0.3
+    HUMAN_R=-5
     TOP_NUM=3
     TEAM_REWARD=0.25
     REGION_GAP = 2
@@ -44,6 +45,7 @@ class EnvParameters:
     obstacle_value = -1
     eject_value = -2
     induct_value = -3
+    human_value = -4
 
 class TrainingParameters:
     GAMMA = 0.95  # discount factor
@@ -55,7 +57,7 @@ class TrainingParameters:
     VALUE_COEF = 0.5
     POLICY_COEF = 1
     N_EPOCHS = 8
-    N_ENVS = 4 # number of processes, 2*cpu cores
+    N_ENVS = 16 # number of processes, 2*cpu cores
     N_MAX_STEPS = 4e7  # maximum number of time steps used in training
     opti_eps=1e-8
     weight_decay=0

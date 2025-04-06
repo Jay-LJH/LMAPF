@@ -53,7 +53,7 @@ class MAP_ACNet(nn.Module):
                 nn.init.constant_(param, 0)
             elif 'weight' in name:
                 nn.init.orthogonal_(param)
-
+        
         # output heads
         self.policy_layer = init2_(nn.Linear(CopParameters.NET_SIZE, CopParameters.OUTPUT_ACTION))
         self.softmax_layer = nn.Softmax(dim=-1)
@@ -108,17 +108,3 @@ class MAP_ACNet(nn.Module):
         policy_sig = torch.sigmoid(policy_layer)
         value = self.value_layer(x)
         return policy,value, policy_sig,hidden_state
-
-if __name__ == '__main__':
-    net=MAP_ACNet()
-    obs = torch.torch.rand(
-        (3,384, CopParameters.OBS_CHANNEL, CopParameters.FOV, CopParameters.FOV),
-        dtype=torch.float32)
-    vec = torch.torch.rand((3,384, runParameters.VEC_LEN), dtype=torch.float32)
-    hidden_state = (
-        torch.torch.rand((384 * 3, CopParameters.NET_SIZE)),
-        torch.torch.rand((384* 3, CopParameters.NET_SIZE)))  # [B*A,3]
-    #
-    policy, value,policy_sig, output_state = net(obs,vec, hidden_state)
-    print("test")
-    print(f"policy shape: {policy.shape}\nvalue: {value.shape}")

@@ -31,6 +31,10 @@ void MazeGraph::load_map(vector<vector<int>> &py_map)
                 this->types[pos] = Type::Obstacle;
                 obstacles.insert(pos);
             }
+            else if(py_map[i][j] == -4)
+            {
+                this->types[pos] = Type::Human;
+            }
             else
             {
                 this->types[pos] = Type::Travel;

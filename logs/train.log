@@ -1,166 +1,402 @@
-2025-02-27 22:05:11,141	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2025-03-31 19:13:16,148	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+*** SIGTERM received at time=1743496766 on cpu 14 ***
+PC: @     0x7ffdddff4b03  (unknown)  (unknown)
+    @     0x7909fa842520  (unknown)  (unknown)
+    @     0x7909fa8e566d         64  clock_gettime
+    @     0x79098278273e        176  (unknown)
+    @     0x7909829c2c6c         48  (unknown)
+    @     0x7909829c3561       2336  (unknown)
+    @     0x790982afc1eb       1536  (unknown)
+    @     0x79098273af06        208  (unknown)
+    @     0x79098273b319        128  (unknown)
+    @     0x79098273c157        784  (unknown)
+    @     0x79098292b181        224  (unknown)
+    @     0x790929042f79        528  (unknown)
+    @ ... and at least 1 more frames
+[2025-04-01 15:39:26,215 E 3701405 3701405] logging.cc:440: *** SIGTERM received at time=1743496766 on cpu 14 ***
+[2025-04-01 15:39:26,217 E 3701405 3701405] logging.cc:440: PC: @     0x7ffdddff4b03  (unknown)  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x7909fa842520  (unknown)  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x7909fa8e566d         64  clock_gettime
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x79098278273e        176  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x7909829c2c6c         48  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x7909829c3561       2336  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x790982afc1eb       1536  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x79098273af06        208  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x79098273b319        128  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x79098273c157        784  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x79098292b181        224  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @     0x790929042f79        528  (unknown)
+[2025-04-01 15:39:26,218 E 3701405 3701405] logging.cc:440:     @ ... and at least 1 more frames
 Usage stats collection is disabled.
 Welcome to LMAPF!
 
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12054)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12050)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12051)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
-[36m(RLRunner pid=12060)[0m (1, 3646, 16, 11, 11)
+episodes: 0, steps: 512 
+
+Saving Model !
+
+episodes: 0, steps: 10752 
+
+episodes: 0, steps: 20992 
+
+episodes: 0, steps: 31232 
+
+episodes: 0, steps: 41472 
+
+episodes: 0, steps: 51712 
+
+episodes: 0, steps: 61952 
+
+episodes: 0, steps: 72192 
+
+episodes: 16, steps: 82432 
+
+episodes: 17, steps: 92672 
+
+Saving Model !
+
+episodes: 17, steps: 102912 
+
+episodes: 17, steps: 113152 
+
+episodes: 17, steps: 123392 
+
+episodes: 17, steps: 133632 
+
+episodes: 17, steps: 143872 
+
+episodes: 17, steps: 154112 
+
+episodes: 32, steps: 164352 
+
+episodes: 35, steps: 174592 
+
+episodes: 35, steps: 184832 
+
+episodes: 35, steps: 195072 
+
+Saving Model !
+
+episodes: 35, steps: 205312 
+
+episodes: 35, steps: 215552 
+
+episodes: 35, steps: 225792 
+
+episodes: 35, steps: 236032 
+
+episodes: 48, steps: 246272 
+
+episodes: 54, steps: 256512 
+
+episodes: 54, steps: 266752 
+
+episodes: 54, steps: 276992 
+
+episodes: 54, steps: 287232 
+
+episodes: 54, steps: 297472 
+
+Saving Model !
+
+episodes: 54, steps: 307712 
+
+episodes: 54, steps: 317952 
+
+episodes: 66, steps: 328192 
+
+episodes: 70, steps: 338432 
+
+episodes: 71, steps: 348672 
+
+episodes: 72, steps: 358912 
+
+episodes: 72, steps: 369152 
+
+episodes: 72, steps: 379392 
+
+episodes: 72, steps: 389632 
+
+episodes: 72, steps: 399872 
+
+Saving Model !
+
+episodes: 84, steps: 410112 
+
+episodes: 89, steps: 420352 
+
+episodes: 89, steps: 430592 
+
+episodes: 90, steps: 440832 
+
+episodes: 90, steps: 451072 
+
+episodes: 90, steps: 461312 
+
+episodes: 90, steps: 471552 
+
+episodes: 90, steps: 481792 
+
+episodes: 100, steps: 492032 
+
+episodes: 106, steps: 502272 
+
+Saving Model !
+
+episodes: 107, steps: 512512 
+
+episodes: 108, steps: 522752 
+
+episodes: 108, steps: 532992 
+
+episodes: 108, steps: 543232 
+
+episodes: 108, steps: 553472 
+
+episodes: 108, steps: 563712 
+
+episodes: 117, steps: 573952 
+
+episodes: 123, steps: 584192 
+
+episodes: 124, steps: 594432 
+
+Saving Model !
+
+episodes: 125, steps: 604672 
+
+episodes: 126, steps: 614912 
+
+episodes: 126, steps: 625152 
+
+episodes: 126, steps: 635392 
+
+episodes: 126, steps: 645632 
+
+episodes: 135, steps: 655872 
+
+episodes: 140, steps: 666112 
+
+episodes: 141, steps: 676352 
+
+episodes: 141, steps: 686592 
+
+episodes: 142, steps: 696832 
+
+Saving Model !
+
+episodes: 142, steps: 707072 
+
+episodes: 142, steps: 717312 
+
+episodes: 142, steps: 727552 
+
+episodes: 151, steps: 737792 
+
+episodes: 156, steps: 748032 
+
+episodes: 157, steps: 758272 
+
+episodes: 157, steps: 768512 
+
+episodes: 158, steps: 778752 
+
+episodes: 158, steps: 788992 
+
+episodes: 158, steps: 799232 
+
+Saving Model !
+
+episodes: 158, steps: 809472 
+
+episodes: 167, steps: 819712 
+
+episodes: 174, steps: 829952 
+
+episodes: 175, steps: 840192 
+
+episodes: 175, steps: 850432 
+
+episodes: 176, steps: 860672 
+
+episodes: 176, steps: 870912 
+
+episodes: 176, steps: 881152 
+
+episodes: 176, steps: 891392 
+
+episodes: 183, steps: 901632 
+
+Saving Model !
+
+episodes: 190, steps: 911872 
+
+episodes: 191, steps: 922112 
+
+episodes: 191, steps: 932352 
+
+episodes: 192, steps: 942592 
+
+episodes: 192, steps: 952832 
+
+episodes: 192, steps: 963072 
+
+episodes: 192, steps: 973312 
+
+episodes: 199, steps: 983552 
+
+episodes: 207, steps: 993792 
+
+episodes: 209, steps: 1004032 
+
+Saving Model !
+
+episodes: 209, steps: 1014272 
+
+episodes: 210, steps: 1024512 
+
+episodes: 210, steps: 1034752 
+
+episodes: 210, steps: 1044992 
+
+episodes: 210, steps: 1055232 
+
+episodes: 216, steps: 1065472 
+
+episodes: 223, steps: 1075712 
+
+episodes: 225, steps: 1085952 
+
+episodes: 225, steps: 1096192 
+
+Saving Model !
+
+episodes: 226, steps: 1106432 
+
+episodes: 226, steps: 1116672 
+
+episodes: 226, steps: 1126912 
+
+episodes: 226, steps: 1137152 
+
+episodes: 232, steps: 1147392 
+
+episodes: 241, steps: 1157632 
+
+episodes: 243, steps: 1167872 
+
+episodes: 243, steps: 1178112 
+
+episodes: 244, steps: 1188352 
+
+episodes: 244, steps: 1198592 
+
+Saving Model !
+
+episodes: 244, steps: 1208832 
+
+episodes: 244, steps: 1219072 
+
+episodes: 248, steps: 1229312 
+
+episodes: 258, steps: 1239552 
+
+episodes: 260, steps: 1249792 
+
+episodes: 260, steps: 1260032 
+
+episodes: 261, steps: 1270272 
+
+episodes: 261, steps: 1280512 
+
+episodes: 261, steps: 1290752 
+
+episodes: 261, steps: 1300992 
+
+Saving Model !
+
+episodes: 264, steps: 1311232 
+
+episodes: 275, steps: 1321472 
+
+episodes: 277, steps: 1331712 
+
+episodes: 277, steps: 1341952 
+
+episodes: 279, steps: 1352192 
+
+episodes: 279, steps: 1362432 
+
+episodes: 279, steps: 1372672 
+
+episodes: 279, steps: 1382912 
+
+episodes: 282, steps: 1393152 
+
+episodes: 292, steps: 1403392 
+
+Saving Model !
+
+episodes: 295, steps: 1413632 
+
+episodes: 295, steps: 1423872 
+
+episodes: 298, steps: 1434112 
+
+episodes: 298, steps: 1444352 
+
+episodes: 298, steps: 1454592 
+
+episodes: 298, steps: 1464832 
+
+episodes: 301, steps: 1475072 
+
+episodes: 312, steps: 1485312 
+
+episodes: 312, steps: 1495552 
+
+episodes: 312, steps: 1505792 
+
+Saving Model !
+
+episodes: 316, steps: 1516032 
+
+episodes: 316, steps: 1526272 
+
+episodes: 316, steps: 1536512 
+
+episodes: 316, steps: 1546752 
+
+episodes: 318, steps: 1556992 
+
+episodes: 329, steps: 1567232 
+
+episodes: 330, steps: 1577472 
+
+episodes: 330, steps: 1587712 
+
+episodes: 333, steps: 1597952 
+
+Saving Model !
+
+episodes: 333, steps: 1608192 
+
+episodes: 333, steps: 1618432 
+
+episodes: 333, steps: 1628672 
+
+episodes: 335, steps: 1638912 
+
+episodes: 346, steps: 1649152 
+
+episodes: 347, steps: 1659392 
+
+episodes: 347, steps: 1669632 
+
+episodes: 350, steps: 1679872 
+
+episodes: 350, steps: 1690112 
+
+episodes: 350, steps: 1700352 
+
 Saving Final Model !
 
-Traceback (most recent call last):
-  File "/home/marmot/ljh/LMAPF/driver.py", line 183, in <module>
-    main(sys.argv)
-  File "/home/marmot/ljh/LMAPF/driver.py", line 125, in main
-    mb_loss.append(global_map_model.train(*slices))
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/ljh/LMAPF/map_model.py", line 75, in train
-    new_ps, new_v,  policy_sig, _ = self.network(observation, input_state)
-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
-    return forward_call(*input, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/amp/autocast_mode.py", line 14, in decorate_autocast
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/ljh/LMAPF/map_net.py", line 72, in forward
-    identity = self.downsample1(x)  
-               ^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
-    return forward_call(*input, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 463, in forward
-    return self._conv_forward(input, self.weight, self.bias)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/marmot/miniconda3/envs/ljh/lib/python3.11/site-packages/torch/nn/modules/conv.py", line 459, in _conv_forward
-    return F.conv2d(input, weight, bias, self.stride,
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-RuntimeError: Unable to find a valid cuDNN algorithm to run convolution

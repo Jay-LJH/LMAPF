@@ -27,4 +27,4 @@ else
     echo "Directory content has not changed. No need to rebuild."
 fi
 
-python eval_MAPF.py "$@" --model_path Maze27-02-251403 --map_path maze-32-32-4
+python eval_MAPF.py "$@" --model_path human_32_32 --map_path maze-32-32-4

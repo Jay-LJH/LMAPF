@@ -6,7 +6,8 @@
 enum class Type
 {
     Obstacle,
-    Travel
+    Travel,
+    Human
 };
 
 

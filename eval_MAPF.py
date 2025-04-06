@@ -97,6 +97,7 @@ if __name__ == "__main__":
         print('[{}] evaluation times:{}'.format(datetime.datetime.now(),eval_time))
         print('success:{} rl time:{} pibt time: {} total time: {}'.format(success,rl_time,env.env_map.pibt_time,total_time))
         print("running steps: ",env.env_map.time_step)
+        print("enter danngerous area: ",env.env_map.enter_danger_time)
         successs.append(success)
         if success:
             runtimes.append(total_time)

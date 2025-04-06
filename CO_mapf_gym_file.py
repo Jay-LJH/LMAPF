@@ -21,27 +21,21 @@ class CO_MAPFEnv(gym.Env):
     """map MAPF problems to a standard RL environment"""
     def __init__(self,env_id,file_name=None):
         if file_name is None:
-            path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
-            config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
+            self.path = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".txt"
+            self.config = "maps/"+runParameters.MAP_CLASS+str(runParameters.WORLD_HIGH)+"_"+str(runParameters.WORLD_WIDE)+".config"
         else:
-            path = "maps/" + file_name + ".txt"
-            config = "maps/" + file_name + ".config"
-        if os.path.exists(config):
-                read_config(config)
+            self.path = "maps/" + file_name + ".txt"
+            self.config = "maps/" + file_name + ".config"
+        if os.path.exists(self.config):
+                read_config(self.config)
         self.induct_value = -3
         self.eject_value = -2
         self.obstacle_value = -1
-        self.travel_value = 0
-        self.world_high,self.world_wide,self.total_map=read_map(path)
-        self.obstacle_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32) 
-        self.obstacle_map[self.total_map == self.obstacle_value] = 1    
+        self.travel_value = 0 
         self.env_id=env_id
         self.project_path = os.getcwd() + "/h_maps"       
         self.num_agents=runParameters.N_AGENT
-        self.finished_task=0
-        self.wait_map=np.zeros((self.world_high,self.world_wide))
-        self.build_sorting_map()
-        self.build_guide_map()        
+        self.finished_task=0       
     # deprecated
     def build_sorting_map(self):
         self.station_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
@@ -60,9 +54,6 @@ class CO_MAPFEnv(gym.Env):
         self.eject_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         self.induct_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32)
         self.obstacle_map[self.total_map == self.obstacle_value] = 1
-        self.eject_map[self.total_map == self.eject_value] = 1
-        self.induct_map[self.total_map == self.induct_value] = 1
-        self.eject_induct_map = self.eject_map + self.induct_map
 
     def build_guide_map(self):
         self.node_poss = []
@@ -93,11 +84,55 @@ class CO_MAPFEnv(gym.Env):
                 if item in self.node_index_dict.keys():
                     self.nearby_node_dict[node_index].append(self.node_index_dict[item])
 
+    def add_random_human(self):
+        rows, cols = self.total_map.shape
+        possible_positions = []
+        for i in range(rows - 1):
+            for j in range(cols - 1):
+                if (self.total_map[i, j] == 0 and 
+                    self.total_map[i, j+1] == 0 and 
+                    self.total_map[i+1, j] == 0 and 
+                    self.total_map[i+1, j+1] == 0):
+                    possible_positions.append((i, j))
+        i, j = random.choice(possible_positions)
+        self.total_map[i, j] = EnvParameters.human_value
+        self.total_map[i, j+1] = EnvParameters.human_value
+        self.total_map[i+1, j] = EnvParameters.human_value
+        self.total_map[i+1, j+1] = EnvParameters.human_value
+        self.obstacle_map[i, j] = 2
+        self.obstacle_map[i, j+1] = 2
+        self.obstacle_map[i+1, j] = 2
+        self.obstacle_map[i+1, j+1] = 2
+
+    def __str__(self):
+        # print the map
+        map_str = ""
+        for i in range(self.world_high):
+            for j in range(self.world_wide):
+                if self.total_map[i, j] == self.obstacle_value:
+                    map_str += "@"
+                elif self.total_map[i, j] == self.eject_value:
+                    map_str += "E"
+                elif self.total_map[i, j] == self.induct_value:
+                    map_str += "I"
+                elif self.total_map[i, j] == self.travel_value:
+                    map_str += "."
+                else:
+                    map_str += "H"
+            map_str += "\n"
+        return map_str
+
     # rand: whether to use a fixed seed 
     # seed: the seed for random
     def global_reset(self,rand = True,seed=42):
         if rand:
             seed = random.randint(0, 100000)
+        self.world_high,self.world_wide,self.total_map=read_map(self.path)
+        self.obstacle_map = np.zeros((self.world_high, self.world_wide),dtype=np.int32) 
+        self.obstacle_map[self.total_map == self.obstacle_value] = 1
+        self.add_random_human() # add a random human block area to the map by jchanging both obstacle map and total_map
+        self.wait_map=np.zeros((self.world_high,self.world_wide))
+        self.build_guide_map() 
         self.pibt=pibt_1.PIBT(self.total_map,self.num_agents,seed)
         # indicate the number of robots in each grids
         self.agent_state=np.zeros((self.world_high,self.world_wide))  
@@ -115,6 +150,7 @@ class CO_MAPFEnv(gym.Env):
         self.world.convert_all_heuri_map(heuristic_map,self.obstacle_map) #convert and save
         self.elapsed=np.zeros(self.num_agents) # for PIBT, control the priority of robots
         self.pibt_time = 0
+        self.enter_danger_time = 0
         return
 
     def local_reset(self):  # update goals
@@ -169,6 +205,10 @@ class CO_MAPFEnv(gym.Env):
             if self.agent_poss[i] == self.pibt.agent_goals[i]:
                 self.finished_task+=1
                 self.elapsed[i]=0
+            # add punishment for entering human area
+            if self.total_map[self.agent_poss[i]] == EnvParameters.human_value:
+                rewards[:, node_index] += CopParameters.HUMAN_R
+                self.enter_danger_time += 1
 
         self.uti_deque.append(uti_map)
         for node_index in range(runParameters.N_NODE):
@@ -292,10 +332,12 @@ class CO_MAPFEnv(gym.Env):
 
     def get_action(self, direction):
         return actionDict[direction]
-
 if __name__ == '__main__':
-    env=CO_MAPFEnv(1)
-    print(env.obs_range)
+    env=CO_MAPFEnv(1,"Proportion_Maze_26_26_2")
+    env.global_reset()
+    print(env)
+    print(env.obstacle_map)
+    print(env.total_map[env.agent_poss[0]])
 
 
 
