@@ -55,7 +55,7 @@ class TrainingParameters:
     VALUE_COEF = 0.5
     POLICY_COEF = 1
     N_EPOCHS = 8
-    N_ENVS = 4 # number of processes, 2*cpu cores
+    N_ENVS = 8 # number of processes, 2*cpu cores
     N_MAX_STEPS = 4e7  # maximum number of time steps used in training
     opti_eps=1e-8
     weight_decay=0

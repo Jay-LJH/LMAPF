@@ -33,7 +33,7 @@ def main(sys_argv):
         wandb.define_metric("map/step")
         wandb.define_metric("map/*", step_metric="map/step")
     setproctitle.setproctitle(
-        RecordingParameters.EXPERIMENT_PROJECT + RecordingParameters.EXPERIMENT_NAME + "@" + RecordingParameters.ENTITY)
+        RecordingParameters.EXPERIMENT_PROJECT + RecordingParameters.EXPERIMENT_NAME)
     set_global_seeds(SetupParameters.SEED)
     if not os.path.exists("./h_maps"):
         os.makedirs("./h_maps")

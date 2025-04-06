@@ -4,7 +4,7 @@ from util import set_global_seeds
 import sys
 import datetime
 MAX_STEP = 1000
-MAX_TIME = 10
+MAX_TIME = 1
 RECORD = False
 EVAL_TIMES=1 if RECORD else 10
 # recording path and collide times
@@ -17,7 +17,7 @@ class Runner(object):
         self.env_map= CO_MAPFEnv(env_id,file_name)
 
     def map_run(self,seed):
-        self.env_map.global_reset_fix(seed)       
+        self.env_map.global_reset_fix(np.random.randint(0,100))       
         map_done = False
         init_time = datetime.datetime.now()
         while map_done==False and (datetime.datetime.now()-init_time).total_seconds() < MAX_TIME:
@@ -39,9 +39,12 @@ if __name__ == "__main__":
     print('start evaluation pibt {} at:{}'.format(env.env_map.path,datetime.datetime.now()))
     successs=[]
     runtimes = []
+    stepss = []
     for eval_time in range(EVAL_TIMES):  # 0 wait ,1 right, 2 down, 3 left, 4 up
         done,run_step,total_time = env.map_run(eval_time*123)
         successs.append(done)
+        if done:
+            stepss.append(run_step)
         if done:
             runtimes.append(total_time)
         print('[{}] evaluation times:{}'.format(datetime.datetime.now(),eval_time))
@@ -53,4 +56,5 @@ if __name__ == "__main__":
     print("success rate: ",success_rate)
     print("success time: ",success_time)
     print("average success time: ",np.mean(runtimes))
+    print("average steps: ",np.mean(stepss))
     print()

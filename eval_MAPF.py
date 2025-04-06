@@ -75,8 +75,8 @@ def parse_arguments():
     
     parser.add_argument('--eval_times',
                         type=int,
-                        default=10,
-                        help='Number of eval time (default: 10)')
+                        default=20,
+                        help='Number of eval time (default: 20)')
     args = parser.parse_args()
 
     path = f"maps/{args.map_path}.txt"
@@ -92,6 +92,7 @@ if __name__ == "__main__":
     env = Runner(0,model_path,args.map_path)
     successs=[]
     runtimes = []
+    stepss = []
     for eval_time in range(EVAL_TIMES):  # 0 wait ,1 right, 2 down, 3 left, 4 up
         success,rl_time,recordings,total_time = env.map_run(eval_time*123)
         print('[{}] evaluation times:{}'.format(datetime.datetime.now(),eval_time))
@@ -100,6 +101,7 @@ if __name__ == "__main__":
         successs.append(success)
         if success:
             runtimes.append(total_time)
+            stepss.append(env.env_map.time_step)
     if record:
         print("saving")
         with open(record_path,"w") as f:
@@ -114,6 +116,7 @@ if __name__ == "__main__":
     success_rate=np.mean(successs)
     print("success rate: ",success_rate)
     print("success time: ",success_time)
+    print("average steps: ",np.mean(stepss))
     print("average success time: ",np.mean(runtimes))
     print()
     
