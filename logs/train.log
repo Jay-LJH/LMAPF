@@ -1,1 +1,136 @@
-2025-04-07 00:35:22,701	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8267 [39m[22m
+2025-04-07 12:48:57,435	INFO worker.py:1807 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8267 [39m[22m
+*** SIGTERM received at time=1744039120 on cpu 20 ***
+PC: @     0x79c514021b1b  (unknown)  (unknown)
+    @     0x79c58c042520  (unknown)  (unknown)
+    @     0x79c513d70391         80  (unknown)
+    @     0x79c51410468f         48  (unknown)
+    @     0x79c51410527e        144  (unknown)
+    @     0x79c513d824cd        176  (unknown)
+    @     0x79c513fc2c6c         48  (unknown)
+    @     0x79c513fc3561       2336  (unknown)
+    @     0x79c5140fc1eb       1536  (unknown)
+    @     0x79c513d3af06        208  (unknown)
+    @     0x79c513d3b319        128  (unknown)
+    @     0x79c513d3c157        784  (unknown)
+    @     0x79c513f2b181        224  (unknown)
+    @     0x79c4ba642f79        528  (unknown)
+    @ ... and at least 1 more frames
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440: *** SIGTERM received at time=1744039120 on cpu 20 ***
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440: PC: @     0x79c514021b1b  (unknown)  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c58c042520  (unknown)  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c513d70391         80  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c51410468f         48  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c51410527e        144  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c513d824cd        176  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c513fc2c6c         48  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c513fc3561       2336  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c5140fc1eb       1536  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c513d3af06        208  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c513d3b319        128  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c513d3c157        784  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c513f2b181        224  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @     0x79c4ba642f79        528  (unknown)
+[2025-04-07 22:18:40,862 E 2640202 2640202] logging.cc:440:     @ ... and at least 1 more frames
+Usage stats collection is disabled.
+Welcome to LMAPF!
+
+episodes: 0, steps: 256 
+
+Saving Model !
+
+episodes: 0, steps: 10496 
+
+episodes: 0, steps: 20736 
+
+episodes: 0, steps: 30976 
+
+episodes: 8, steps: 41216 
+
+episodes: 8, steps: 51456 
+
+episodes: 8, steps: 61696 
+
+episodes: 13, steps: 71936 
+
+episodes: 24, steps: 82176 
+
+episodes: 25, steps: 92416 
+
+Saving Model !
+
+episodes: 25, steps: 102656 
+
+episodes: 26, steps: 112896 
+
+episodes: 32, steps: 123136 
+
+episodes: 33, steps: 133376 
+
+episodes: 38, steps: 143616 
+
+episodes: 40, steps: 153856 
+
+episodes: 45, steps: 164096 
+
+episodes: 47, steps: 174336 
+
+episodes: 60, steps: 184576 
+
+episodes: 61, steps: 194816 
+
+Saving Model !
+
+episodes: 65, steps: 205056 
+
+episodes: 66, steps: 215296 
+
+episodes: 73, steps: 225536 
+
+episodes: 76, steps: 235776 
+
+episodes: 80, steps: 246016 
+
+episodes: 84, steps: 256256 
+
+episodes: 88, steps: 266496 
+
+episodes: 94, steps: 276736 
+
+episodes: 97, steps: 286976 
+
+episodes: 104, steps: 297216 
+
+Saving Model !
+
+episodes: 108, steps: 307456 
+
+episodes: 114, steps: 317696 
+
+episodes: 116, steps: 327936 
+
+episodes: 128, steps: 338176 
+
+episodes: 130, steps: 348416 
+
+episodes: 139, steps: 358656 
+
+episodes: 139, steps: 368896 
+
+episodes: 142, steps: 379136 
+
+episodes: 145, steps: 389376 
+
+episodes: 151, steps: 399616 
+
+Saving Model !
+
+episodes: 152, steps: 409856 
+
+episodes: 158, steps: 420096 
+
+episodes: 159, steps: 430336 
+
+episodes: 165, steps: 440576 
+
+Saving Final Model !
+
